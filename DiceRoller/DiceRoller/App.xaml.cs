@@ -1,6 +1,5 @@
 ﻿using Prism;
 using Prism.Ioc;
-using DiceRoller.ViewModels;
 using DiceRoller.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
