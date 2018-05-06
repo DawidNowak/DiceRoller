@@ -1,4 +1,6 @@
-﻿using Foundation;
+﻿using DiceRoller.DataAccess.Context;
+using DiceRoller.iOS.Helpers;
+using Foundation;
 using Prism;
 using Prism.Ioc;
 using UIKit;
@@ -32,7 +34,7 @@ namespace DiceRoller.iOS
     {
         public void RegisterTypes(IContainerRegistry container)
         {
-
+            container.Register<IDbPathHelper, DbPathHelperIOS>();
         }
     }
 }

@@ -1,17 +1,19 @@
 ﻿using System.Collections.Generic;
+using SQLite;
+using SQLiteNetExtensions.Attributes;
 
-namespace DiceRoller.DataAccess.Model
+namespace DiceRoller.DataAccess.Models
 {
+    [Table("Dice")]
     public class Dice : Entity
     {
-        public Dice(int walls, string path)
-        {
-            Walls = new DiceWall[walls];
-            Path = path;
-        }
+        [OneToMany(CascadeOperations = CascadeOperation.All)]
         public ICollection<DiceWall> Walls { get; set; }
+        [MaxLength(50)]
         public string Path { get; set; }
+        [ForeignKey(typeof(Game))]
         public int GameId { get; set; }
+        [ManyToOne]
         public virtual Game Game { get; set; }
     }
 }

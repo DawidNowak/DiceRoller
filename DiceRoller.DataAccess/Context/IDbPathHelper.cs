@@ -2,6 +2,6 @@
 {
     public interface IDbPathHelper
     {
-        string GetLocalFilePath(string filename);
+        string GetLocalFilePath();
     }
 }

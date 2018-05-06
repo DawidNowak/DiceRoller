@@ -1,58 +1,27 @@
-﻿using System.Linq;
-using Autofac.Core;
-using DiceRoller.DataAccess.Model;
-using Microsoft.EntityFrameworkCore;
-using Xamarin.Forms;
+﻿using DiceRoller.DataAccess.Models;
+using SQLite;
 
 namespace DiceRoller.DataAccess.Context
 {
-    public class DiceContext : DbContext
+    public class DiceContext : IContext
     {
-        public DiceContext(IDbPathHelper pathHelper)
+        public DiceContext(IDbPathHelper helper)
         {
-            DbPath = pathHelper.GetLocalFilePath("diceRollerDb.sqlite");
+            Path = helper.GetLocalFilePath();
+            _conn = new SQLiteConnection(Path);
         }
 
-        public string DbPath { get; }
+        private readonly SQLiteConnection _conn;
+        public string Path { get; }
 
-        public DbSet<DiceWall> Walls { get; set; }
-        public DbSet<Dice> Dice { get; set; }
-        public DbSet<Game> Games { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public void InsertOrReplace(object o)
         {
-            optionsBuilder.UseSqlite($"Filename={DbPath}");
+            _conn.InsertOrReplace(o);
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public void CreateTable<T>() where T : Entity, new()
         {
-            modelBuilder.ConfigureGame()
-                .ConfugureDice()
-                .ConfugureDiceWall();
-
-            base.OnModelCreating(modelBuilder);
-        }
-
-        public void RollBack()
-        {
-            var changedEntries = ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged);
-
-            foreach (var entry in changedEntries)
-            {
-                switch (entry.State)
-                {
-                    case EntityState.Modified:
-                        entry.CurrentValues.SetValues(entry.OriginalValues);
-                        entry.State = EntityState.Unchanged;
-                        break;
-                    case EntityState.Added:
-                        entry.State = EntityState.Detached;
-                        break;
-                    case EntityState.Deleted:
-                        entry.State = EntityState.Unchanged;
-                        break;
-                }
-            }
+            _conn.CreateTable<T>();
         }
     }
 }

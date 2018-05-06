@@ -1,6 +1,8 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
+using DiceRoller.DataAccess.Context;
+using DiceRoller.Droid.Helpers;
 using Prism;
 using Prism.Ioc;
 
@@ -25,7 +27,7 @@ namespace DiceRoller.Droid
     {
         public void RegisterTypes(IContainerRegistry container)
         {
-            // Register any platform specific implementations
+            container.Register<IDbPathHelper, DbPathHelperDroid>();
         }
     }
 }
