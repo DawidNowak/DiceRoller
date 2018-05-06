@@ -1,4 +1,5 @@
-﻿using DiceRoller.DataAccess.Models;
+﻿using System.Threading.Tasks;
+using DiceRoller.DataAccess.Models;
 
 namespace DiceRoller.DataAccess.Context
 {
@@ -8,5 +9,6 @@ namespace DiceRoller.DataAccess.Context
 
         void CreateTable<T>() where T : Entity, new();
         void InsertOrReplace(object o);
+        T GetById<T>(int id, bool eagerLoading = true) where T : Entity, new();
     }
 }
