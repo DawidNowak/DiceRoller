@@ -5,14 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Prism.Autofac.Forms" Version="7.0.0.396" />
     <PackageReference Include="sqlite-net-pcl" Version="1.4.118" />
     <PackageReference Include="SQLiteNetExtensions-netstandard" Version="2.0.0-alpha3" />
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
-    <PackageReference Include="Prism.Autofac.Forms" Version="7.0.0.396" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\DiceRoller.DataAccess\DiceRoller.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>
