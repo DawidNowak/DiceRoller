@@ -6,6 +6,13 @@
 
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
         <Label Text="Welcome to Xamarin Forms and Prism!" />
+        <ListView ItemsSource="{Binding Path=Games}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding Path=Name}"></TextCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </StackLayout>
 
 </ContentPage>
