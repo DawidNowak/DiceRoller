@@ -30,7 +30,7 @@ namespace DiceRoller
             EnsureDbCreated(ctx);
             EnsureDbSeeded(ctx);
 
-            await NavigationService.NavigateAsync("NavigationPage/MainPage");
+             await NavigationService.NavigateAsync("NavigationPage/MainPage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)

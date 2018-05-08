@@ -10,7 +10,7 @@ namespace DiceRoller.DataAccess.Context
     public class DiceContext : IContext
     {
         private readonly SQLiteConnection _conn;
-        private Dictionary<Type, Action<Entity>> _includeActions;
+        private readonly Dictionary<Type, Action<Entity>> _includeActions;
         
         public DiceContext(IDbPathHelper helper)
         {
