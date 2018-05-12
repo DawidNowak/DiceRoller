@@ -33,4 +33,10 @@
     <ProjectReference Include="..\..\DiceRoller.DataAccess\DiceRoller.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Update="Views\GamePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

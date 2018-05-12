@@ -37,6 +37,7 @@ namespace DiceRoller
         {
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage>();
+            containerRegistry.RegisterForNavigation<GamePage>();
 
             containerRegistry.RegisterSingleton<IContext, DiceContext>();
         }
