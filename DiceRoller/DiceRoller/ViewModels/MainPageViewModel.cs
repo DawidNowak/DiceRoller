@@ -20,13 +20,13 @@ namespace DiceRoller.ViewModels
             _ctx = ctx;
             Title = "Main Page";
 
-            GameNavigationCommand = new DelegateCommand<Game>(Navigate);
+            GameNavigationCommand = new DelegateCommand<Game>(navigate);
 
             Games = new ObservableCollection<Game>();
             ctx.GetAll<Game>().ForEach(g => Games.Add(g));
         }
 
-        private async void Navigate(Game game)
+        private async void navigate(Game game)
         {
             var param = new NavigationParameters {{"game", game}};
 
