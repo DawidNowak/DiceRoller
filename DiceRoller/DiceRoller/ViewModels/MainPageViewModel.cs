@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
 using Prism.Commands;

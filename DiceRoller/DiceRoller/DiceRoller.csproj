@@ -8,6 +8,7 @@
     <None Remove="Images\MiceMystics\mm_bow.jpg" />
     <None Remove="Images\MiceMystics\mm_bow_surge.jpg" />
     <None Remove="Images\MiceMystics\mm_cheese.jpg" />
+    <None Remove="Images\MiceMystics\mm_mini.jpg" />
     <None Remove="Images\MiceMystics\mm_shield_sword.jpg" />
     <None Remove="Images\MiceMystics\mm_shield_sword_surge.jpg" />
     <None Remove="Images\MiceMystics\mm_sword_surge.jpg" />
@@ -17,6 +18,7 @@
     <EmbeddedResource Include="Images\MiceMystics\mm_bow.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_bow_surge.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_cheese.jpg" />
+    <EmbeddedResource Include="Images\MiceMystics\mm_mini.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_shield_sword.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_shield_sword_surge.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_sword_surge.jpg" />
@@ -34,13 +36,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Controls\DiceControl.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\GamePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controls\" />
   </ItemGroup>
 
 </Project>

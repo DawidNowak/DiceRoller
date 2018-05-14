@@ -1,4 +1,7 @@
-﻿using DiceRoller.DataAccess.Models;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+using DiceRoller.DataAccess.Models;
+using DiceRoller.Interfaces;
 using Prism.Commands;
 using Prism.Navigation;
 
@@ -6,6 +9,7 @@ namespace DiceRoller.ViewModels
 {
     public class GamePageViewModel : ViewModelBase
     {
+        public IView View { get; set; }
         public DelegateCommand IncreaseDiceCommand { get; }
         public DelegateCommand DecreaseDiceCommand { get; }
 
@@ -36,20 +40,26 @@ namespace DiceRoller.ViewModels
             }
         }
 
+        public ObservableCollection<string> DiceMinis { get; set; }
+
         public override void OnNavigatedTo(NavigationParameters parameters)
         {
             Game = (Game)parameters["game"];
+            DiceMinis = new ObservableCollection<string>(Game.Dice.Select(d => d.MiniImageSource));
+            View?.PopulateMinis();
             base.OnNavigatedTo(parameters);
         }
 
         private void increaseDice()
         {
             DiceNumber++;
+            View?.AddDice();
         }
 
         private void decreaseDice()
         {
             DiceNumber--;
+            View?.RemoveDice();
         }
     }
 }

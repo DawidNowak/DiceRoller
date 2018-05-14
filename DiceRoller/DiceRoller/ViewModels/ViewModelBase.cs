@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using DiceRoller.Interfaces;
+using Prism.Mvvm;
 using Prism.Navigation;
 
 namespace DiceRoller.ViewModels
