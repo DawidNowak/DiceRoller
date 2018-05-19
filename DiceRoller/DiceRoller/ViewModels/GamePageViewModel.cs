@@ -40,7 +40,7 @@ namespace DiceRoller.ViewModels
 
         public void AddDice(Dice toAdd)
         {
-            if (_diceNumber >= 8) return;
+            if (_diceNumber >= 12) return;
 
             DiceNumber++;
             View?.AddDice(toAdd);

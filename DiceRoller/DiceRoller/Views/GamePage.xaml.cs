@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using DiceRoller.Controls;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Interfaces;
 using DiceRoller.ViewModels;
@@ -24,19 +26,26 @@ namespace DiceRoller.Views
 
         public void AddDice(Dice mini)
         {
-            var dice = new Image
+            var dice = new SwipeableImage
             {
                 Source = ImageSource.FromResource(mini.Path + mini.Walls.First().ImageSource),
                 BindingContext = mini,
                 Scale = 2.0
             };
 
+            dice.SwipedLeft += (sender, args) => RemoveDice(DiceLayout.Children.IndexOf(sender));
+            dice.SwipedRight += (sender, args) => RemoveDice(DiceLayout.Children.IndexOf(sender));
+
             DiceLayout.Children.Add(dice);
         }
 
         public void RemoveDice(int index)
         {
-            DiceLayout.Children.RemoveAt(index);
+            if (index >= 0)
+            {
+                DiceLayout.Children.RemoveAt(index);
+                ((GamePageViewModel) BindingContext).DiceNumber--;
+            }
         }
 
         public void RefreshMinis(ICollection<View> minis)
