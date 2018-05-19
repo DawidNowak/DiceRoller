@@ -9,14 +9,12 @@ namespace DiceRoller.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
-        private readonly IContext _ctx;
         public ObservableCollection<Game> Games { get; set; }
 
         public DelegateCommand<Game> GameNavigationCommand { get; }
         public MainPageViewModel(INavigationService navigationService, IContext ctx) 
             : base (navigationService)
         {
-            _ctx = ctx;
             Title = "Main Page";
 
             GameNavigationCommand = new DelegateCommand<Game>(navigate);

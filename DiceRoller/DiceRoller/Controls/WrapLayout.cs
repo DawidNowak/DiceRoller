@@ -1,118 +1,184 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Xamarin.Forms;
 
 namespace DiceRoller.Controls
 {
-    /// <summary>
-	/// New WrapLayout
-	/// </summary>
-	/// <author>Jason Smith</author>
-	public class WrapLayout : Layout<View>
+    public class WrapLayout : Layout<View>
     {
-        Dictionary<View, SizeRequest> layoutCache = new Dictionary<View, SizeRequest>();
+        Dictionary<Size, LayoutData> _layoutDataCache = new Dictionary<Size, LayoutData>();
 
-        /// <summary>
-        /// Backing Storage for the Spacing property
-        /// </summary>
-        public static readonly BindableProperty SpacingProperty =
-            BindableProperty.Create<WrapLayout, double>(w => w.Spacing, 5,
-                propertyChanged: (bindable, oldvalue, newvalue) => ((WrapLayout)bindable).layoutCache.Clear());
+        public static readonly BindableProperty ColumnSpacingProperty = BindableProperty.Create(
+            "ColumnSpacing",
+            typeof(double),
+            typeof(WrapLayout),
+            5.0,
+            propertyChanged: (bindable, oldvalue, newvalue) =>
+            {
+                ((WrapLayout)bindable).InvalidateLayout();
+            });
 
-        /// <summary>
-        /// Spacing added between elements (both directions)
-        /// </summary>
-        /// <value>The spacing.</value>
-        public double Spacing
+        public static readonly BindableProperty RowSpacingProperty = BindableProperty.Create(
+            "RowSpacing",
+            typeof(double),
+            typeof(WrapLayout),
+            5.0,
+            propertyChanged: (bindable, oldvalue, newvalue) =>
+            {
+                ((WrapLayout)bindable).InvalidateLayout();
+            });
+
+        public double ColumnSpacing
         {
-            get { return (double)GetValue(SpacingProperty); }
-            set { SetValue(SpacingProperty, value); }
+            set => SetValue(ColumnSpacingProperty, value);
+            get => (double)GetValue(ColumnSpacingProperty);
         }
 
-        public WrapLayout()
+        public double RowSpacing
         {
-            VerticalOptions = HorizontalOptions = LayoutOptions.FillAndExpand;
+            set => SetValue(RowSpacingProperty, value);
+            get => (double)GetValue(RowSpacingProperty);
+        }
+
+        protected override SizeRequest OnMeasure(double widthConstraint, double heightConstraint)
+        {
+            LayoutData layoutData = GetLayoutData(widthConstraint, heightConstraint);
+            if (layoutData.VisibleChildCount == 0)
+            {
+                return new SizeRequest();
+            }
+
+            Size totalSize = new Size(layoutData.CellSize.Width * layoutData.Columns + ColumnSpacing * (layoutData.Columns - 1),
+                                      layoutData.CellSize.Height * layoutData.Rows + RowSpacing * (layoutData.Rows - 1));
+            return new SizeRequest(totalSize);
+        }
+
+        protected override void LayoutChildren(double x, double y, double width, double height)
+        {
+            var layoutData = GetLayoutData(width, height);
+
+            if (layoutData.VisibleChildCount == 0)
+            {
+                return;
+            }
+
+            var xChild = x;
+            var yChild = y;
+            var column = 0;
+
+            foreach (View child in Children)
+            {
+                if (!child.IsVisible)
+                {
+                    continue;
+                }
+
+                LayoutChildIntoBoundingRegion(child, new Rectangle(new Point(xChild, yChild), layoutData.CellSize));
+
+                if (++column == layoutData.Columns)
+                {
+                    column = 0;
+                    xChild = x;
+                    yChild += RowSpacing + layoutData.CellSize.Height;
+                }
+                else
+                {
+                    xChild += ColumnSpacing + layoutData.CellSize.Width;
+                }
+            }
+        }
+
+        LayoutData GetLayoutData(double width, double height)
+        {
+            var size = new Size(width, height);
+
+            // Check if cached information is available.
+            if (_layoutDataCache.ContainsKey(size))
+            {
+                return _layoutDataCache[size];
+            }
+
+            var visibleChildCount = 0;
+            var maxChildSize = new Size();
+            var layoutData = new LayoutData();
+
+            // Enumerate through all the children.
+            foreach (var child in Children)
+            {
+                // Skip invisible children.
+                if (!child.IsVisible)
+                    continue;
+
+                // Count the visible children.
+                visibleChildCount++;
+
+                // Get the child's requested size.
+                var childSizeRequest = child.Measure(Double.PositiveInfinity, Double.PositiveInfinity);
+
+                // Accumulate the maximum child size.
+                maxChildSize.Width = Math.Max(maxChildSize.Width, childSizeRequest.Request.Width);
+                maxChildSize.Height = Math.Max(maxChildSize.Height, childSizeRequest.Request.Height);
+            }
+
+            if (visibleChildCount != 0)
+            {
+                // Calculate the number of rows and columns.
+                int rows;
+                int columns;
+                if (Double.IsPositiveInfinity(width))
+                {
+                    columns = visibleChildCount;
+                    rows = 1;
+                }
+                else
+                {
+                    columns = (int)((width + ColumnSpacing) / (maxChildSize.Width + ColumnSpacing));
+                    columns = Math.Max(1, columns);
+                    rows = (visibleChildCount + columns - 1) / columns;
+                }
+
+                // Now maximize the cell size based on the layout size.
+                var cellSize = new Size();
+
+                if (Double.IsPositiveInfinity(width))
+                {
+                    cellSize.Width = maxChildSize.Width;
+                }
+                else
+                {
+                    cellSize.Width = (width - ColumnSpacing * (columns - 1)) / columns;
+                }
+
+                if (Double.IsPositiveInfinity(height))
+                {
+                    cellSize.Height = maxChildSize.Height;
+                }
+                else
+                {
+                    cellSize.Height = (height - RowSpacing * (rows - 1)) / rows;
+                }
+
+                layoutData = new LayoutData(visibleChildCount, cellSize, rows, columns);
+            }
+
+            _layoutDataCache.Add(size, layoutData);
+            return layoutData;
+        }
+
+        protected override void InvalidateLayout()
+        {
+            base.InvalidateLayout();
+
+            // Discard all layout information for children added or removed.
+            _layoutDataCache.Clear();
         }
 
         protected override void OnChildMeasureInvalidated()
         {
             base.OnChildMeasureInvalidated();
-            layoutCache.Clear();
-        }
 
-        protected override SizeRequest OnSizeRequest(double widthConstraint, double heightConstraint)
-        {
-
-            double lastX;
-            double lastY;
-            var layout = NaiveLayout(widthConstraint, heightConstraint, out lastX, out lastY);
-
-            return new SizeRequest(new Size(lastX, lastY));
-        }
-
-        protected override void LayoutChildren(double x, double y, double width, double height)
-        {
-            double lastX, lastY;
-            var layout = NaiveLayout(width, height, out lastX, out lastY);
-
-            foreach (var t in layout)
-            {
-                var offset = (int)((width - t.Last().Item2.Right) / 2);
-                foreach (var dingus in t)
-                {
-                    var location = new Rectangle(dingus.Item2.X + x + offset, dingus.Item2.Y + y, dingus.Item2.Width, dingus.Item2.Height);
-                    LayoutChildIntoBoundingRegion(dingus.Item1, location);
-                }
-            }
-        }
-
-        private List<List<Tuple<View, Rectangle>>> NaiveLayout(double width, double height, out double lastX, out double lastY)
-        {
-            double startX = 0;
-            double startY = 0;
-            double right = width;
-            double nextY = 0;
-
-            lastX = 0;
-            lastY = 0;
-
-            var result = new List<List<Tuple<View, Rectangle>>>();
-            var currentList = new List<Tuple<View, Rectangle>>();
-
-            foreach (var child in Children)
-            {
-                SizeRequest sizeRequest;
-                if (!layoutCache.TryGetValue(child, out sizeRequest))
-                {
-                    layoutCache[child] = sizeRequest = child.GetSizeRequest(double.PositiveInfinity, double.PositiveInfinity);
-                }
-
-                var paddedWidth = sizeRequest.Request.Width + Spacing;
-                var paddedHeight = sizeRequest.Request.Height + Spacing;
-
-                if (startX + paddedWidth > right)
-                {
-                    startX = 0;
-                    startY += nextY;
-
-                    if (currentList.Count > 0)
-                    {
-                        result.Add(currentList);
-                        currentList = new List<Tuple<View, Rectangle>>();
-                    }
-                }
-
-                currentList.Add(new Tuple<View, Rectangle>(child, new Rectangle(startX, startY, sizeRequest.Request.Width, sizeRequest.Request.Height)));
-
-                lastX = Math.Max(lastX, startX + paddedWidth);
-                lastY = Math.Max(lastY, startY + paddedHeight);
-
-                nextY = Math.Max(nextY, paddedHeight);
-                startX += paddedWidth;
-            }
-            result.Add(currentList);
-            return result;
+            // Discard all layout information for child size changed.
+            _layoutDataCache.Clear();
         }
     }
 }
