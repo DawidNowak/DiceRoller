@@ -24,11 +24,14 @@ namespace DiceRoller.Views
             base.OnBindingContextChanged();
         }
 
+        public IList<View> Dice => DiceLayout.Children;
+
         public void AddDice(Dice mini)
         {
+            var rand = new Random();
             var dice = new SwipeableImage
             {
-                Source = ImageSource.FromResource(mini.Path + mini.Walls.First().ImageSource),
+                Source = ImageSource.FromResource(mini.Path + mini.Walls.ElementAt(rand.Next(0, mini.Walls.Count)).ImageSource),
                 BindingContext = mini,
                 Scale = 2.0
             };

@@ -5,14 +5,21 @@
              x:Class="DiceRoller.Views.GamePage">
     <ContentPage.Content>
         <StackLayout Orientation="Vertical">
-            <Label Text="{Binding Path=Game.Name}" FontSize="Medium" HorizontalTextAlignment="Center"/>
-
-            <controls:WrapLayout x:Name="MinisLayout" Margin="20" ColumnSpacing="40" RowSpacing="20">
-            </controls:WrapLayout>
-
-            <controls:WrapLayout x:Name="DiceLayout" Margin="20" ColumnSpacing="32" RowSpacing="46">
-            </controls:WrapLayout>
+            <Label Text="{Binding Path=Game.Name}" 
+                   FontSize="Medium" 
+                   HorizontalTextAlignment="Center"/>
+            <controls:WrapLayout x:Name="MinisLayout" 
+                                 Margin="20" 
+                                 ColumnSpacing="40" 
+                                 RowSpacing="20"/>
+            <StackLayout VerticalOptions="CenterAndExpand">
+                <controls:WrapLayout x:Name="DiceLayout" 
+                                     Margin="20" 
+                                     ColumnSpacing="32" 
+                                     RowSpacing="46"/>
+            </StackLayout>
+            <Button Text="Roll"
+                    Command="{Binding Path=RollCommand}"></Button>
         </StackLayout>
-
     </ContentPage.Content>
 </ContentPage>

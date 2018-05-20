@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using DiceRoller.Controls;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Interfaces;
 using Prism.Commands;
 using Prism.Navigation;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace DiceRoller.ViewModels
 {
@@ -13,12 +17,13 @@ namespace DiceRoller.ViewModels
         private readonly ICollection<View> _minis;
 
         public IView View { get; set; }
-        public DelegateCommand<Dice> IncreaseDiceCommand { get; }
+        public DelegateCommand RollCommand { get; }
+
 
         public GamePageViewModel(INavigationService navigationService) : base(navigationService)
         {
             Title = "Game View Model";
-            IncreaseDiceCommand = new DelegateCommand<Dice>(AddDice);
+            RollCommand = new DelegateCommand(Roll);
             _minis = new List<View>();
         }
 
@@ -36,6 +41,20 @@ namespace DiceRoller.ViewModels
         {
             get => _diceNumber;
             set => SetProperty(ref _diceNumber, value);
+        }
+
+        private void Roll()
+        {
+            var dice = View?.Dice;
+            var rand = new Random();
+
+            dice.ForEach(d =>
+            {
+                var diceCtx = (Dice) d.BindingContext;
+                ((SwipeableImage)d).Source = ImageSource.FromResource(diceCtx.Path +
+                                                    diceCtx.Walls.ElementAt(rand.Next(0, diceCtx.Walls.Count))
+                                                        .ImageSource);
+            });
         }
 
         public void AddDice(Dice toAdd)
