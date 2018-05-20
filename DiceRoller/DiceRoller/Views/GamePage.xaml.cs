@@ -29,17 +29,17 @@ namespace DiceRoller.Views
         public void AddDice(Dice mini)
         {
             var rand = new Random();
-            var dice = new SwipeableImage
+            var diceImg = new SwipeableImage
             {
                 Source = ImageSource.FromResource(mini.Path + mini.Walls.ElementAt(rand.Next(0, mini.Walls.Count)).ImageSource),
                 BindingContext = mini,
                 Scale = 2.0
             };
 
-            dice.SwipedLeft += (sender, args) => RemoveDice(DiceLayout.Children.IndexOf(sender));
-            dice.SwipedRight += (sender, args) => RemoveDice(DiceLayout.Children.IndexOf(sender));
+            diceImg.SwipedLeft += (sender, args) => RemoveDice(DiceLayout.Children.IndexOf(sender));
+            diceImg.SwipedRight += (sender, args) => RemoveDice(DiceLayout.Children.IndexOf(sender));
 
-            DiceLayout.Children.Add(dice);
+            DiceLayout.Children.Add(diceImg);
         }
 
         public void RemoveDice(int index)

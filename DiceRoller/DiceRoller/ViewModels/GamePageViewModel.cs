@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using System.Threading.Tasks;
 using DiceRoller.Controls;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Interfaces;
@@ -14,6 +14,7 @@ namespace DiceRoller.ViewModels
 {
     public class GamePageViewModel : ViewModelBase
     {
+        private bool _canRoll = true;
         private readonly ICollection<View> _minis;
 
         public IView View { get; set; }
@@ -23,7 +24,7 @@ namespace DiceRoller.ViewModels
         public GamePageViewModel(INavigationService navigationService) : base(navigationService)
         {
             Title = "Game View Model";
-            RollCommand = new DelegateCommand(Roll);
+            RollCommand = new DelegateCommand(Roll, CanRoll);
             _minis = new List<View>();
         }
 
@@ -43,19 +44,45 @@ namespace DiceRoller.ViewModels
             set => SetProperty(ref _diceNumber, value);
         }
 
-        private void Roll()
+        private async void Roll()
         {
+            ChangeRollEnabled(false);
             var dice = View?.Dice;
             var rand = new Random();
 
-            dice.ForEach(d =>
+            for (int delay = 160; delay < 520; delay+=40)
             {
-                var diceCtx = (Dice) d.BindingContext;
-                ((SwipeableImage)d).Source = ImageSource.FromResource(diceCtx.Path +
-                                                    diceCtx.Walls.ElementAt(rand.Next(0, diceCtx.Walls.Count))
-                                                        .ImageSource);
-            });
+                dice.ForEach(async d =>
+                {
+                    var diceCtx = (Dice)d.BindingContext;
+                    if (rand.Next(0, 4) == 0)
+                    {
+                        await Task.Delay(100);
+                    }
+                    else
+                    {
+                        await d.FadeTo(0, 50);
+                        ((SwipeableImage)d).Source = ImageSource.FromResource(diceCtx.Path +
+                                                                              diceCtx.Walls.ElementAt(rand.Next(0, diceCtx.Walls.Count))
+                                                                                  .ImageSource);
+                        await d.FadeTo(1, 50);
+                    }
+
+                    
+                });
+                await Task.Delay(delay);
+            }
+
+            ChangeRollEnabled(true);
         }
+
+        private void ChangeRollEnabled(bool canRoll)
+        {
+            _canRoll = canRoll;
+            RollCommand.RaiseCanExecuteChanged();
+        }
+
+        private bool CanRoll() => _canRoll;
 
         public void AddDice(Dice toAdd)
         {
