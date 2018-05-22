@@ -33,7 +33,8 @@ namespace DiceRoller.Views
             {
                 Source = ImageSource.FromResource(mini.Path + mini.Walls.ElementAt(rand.Next(0, mini.Walls.Count)).ImageSource),
                 BindingContext = mini,
-                Scale = 2.0
+                HeightRequest = 64d,
+                WidthRequest = 64d
             };
 
             diceImg.SwipedLeft += (sender, args) => RemoveDice(DiceLayout.Children.IndexOf(sender));

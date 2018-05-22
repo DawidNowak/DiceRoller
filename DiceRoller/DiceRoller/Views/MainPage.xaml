@@ -5,6 +5,10 @@
              x:Name="MainContentPage"
              Title="{Binding Title}">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Icon="ic_settings.png" Command="{Binding Path=SettingsNavigationCommand}"/>
+    </ContentPage.ToolbarItems>
+
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
         <ListView x:Name="GamesView" ItemsSource="{Binding Path=Games}">
             <ListView.ItemTemplate>

@@ -12,12 +12,15 @@ namespace DiceRoller.ViewModels
         public ObservableCollection<Game> Games { get; set; }
 
         public DelegateCommand<Game> GameNavigationCommand { get; }
+        public DelegateCommand SettingsNavigationCommand { get; }
+        
         public MainPageViewModel(INavigationService navigationService, IContext ctx) 
             : base (navigationService)
         {
             Title = "Main Page";
 
             GameNavigationCommand = new DelegateCommand<Game>(navigate);
+            SettingsNavigationCommand = new DelegateCommand(navigateToSettings);
 
             Games = new ObservableCollection<Game>();
             ctx.GetAll<Game>().ForEach(g => Games.Add(g));
@@ -26,8 +29,12 @@ namespace DiceRoller.ViewModels
         private async void navigate(Game game)
         {
             var param = new NavigationParameters {{"game", game}};
+            await NavigationService.NavigateAsync("GamePage", param);
+        }
 
-            await NavigationService.NavigateAsync("NavigationPage/GamePage", param);
+        private async void navigateToSettings()
+        {
+            await NavigationService.NavigateAsync("SettingsPage");
         }
     }
 }

@@ -3,23 +3,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:DiceRoller.Controls"
              x:Class="DiceRoller.Views.GamePage">
-    <ContentPage.Content>
-        <StackLayout Orientation="Vertical">
-            <Label Text="{Binding Path=Game.Name}" 
+
+    <StackLayout Orientation="Vertical">
+        <Label Text="{Binding Path=Game.Name}" 
                    FontSize="Medium" 
                    HorizontalTextAlignment="Center"/>
-            <controls:WrapLayout x:Name="MinisLayout" 
+        <controls:WrapLayout x:Name="MinisLayout" 
                                  Margin="20" 
-                                 ColumnSpacing="40" 
-                                 RowSpacing="20"/>
-            <StackLayout VerticalOptions="CenterAndExpand">
-                <controls:WrapLayout x:Name="DiceLayout" 
+                                 ColumnSpacing="10" 
+                                 RowSpacing="10"/>
+        <StackLayout VerticalOptions="CenterAndExpand">
+            <controls:WrapLayout x:Name="DiceLayout" 
                                      Margin="20" 
-                                     ColumnSpacing="32" 
-                                     RowSpacing="46"/>
-            </StackLayout>
-            <Button Text="Roll"
-                    Command="{Binding Path=RollCommand}"></Button>
+                                     ColumnSpacing="10" 
+                                     RowSpacing="10"/>
         </StackLayout>
-    </ContentPage.Content>
+
+        <Button Text="Roll"
+                    Command="{Binding Path=RollCommand}"></Button>
+    </StackLayout>
 </ContentPage>

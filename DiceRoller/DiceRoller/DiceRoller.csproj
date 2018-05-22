@@ -12,6 +12,11 @@
     <None Remove="Images\MiceMystics\mm_shield_sword.jpg" />
     <None Remove="Images\MiceMystics\mm_shield_sword_surge.jpg" />
     <None Remove="Images\MiceMystics\mm_sword_surge.jpg" />
+    <None Remove="Images\res\mipmap-hdpi\ic_settings.png" />
+    <None Remove="Images\res\mipmap-mdpi\ic_settings.png" />
+    <None Remove="Images\res\mipmap-xhdpi\ic_settings.png" />
+    <None Remove="Images\res\mipmap-xxhdpi\ic_settings.png" />
+    <None Remove="Images\res\mipmap-xxxhdpi\ic_settings.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,13 +27,18 @@
     <EmbeddedResource Include="Images\MiceMystics\mm_shield_sword.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_shield_sword_surge.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_sword_surge.jpg" />
+    <EmbeddedResource Include="Images\res\mipmap-hdpi\ic_settings.png" />
+    <EmbeddedResource Include="Images\res\mipmap-mdpi\ic_settings.png" />
+    <EmbeddedResource Include="Images\res\mipmap-xhdpi\ic_settings.png" />
+    <EmbeddedResource Include="Images\res\mipmap-xxhdpi\ic_settings.png" />
+    <EmbeddedResource Include="Images\res\mipmap-xxxhdpi\ic_settings.png" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="sqlite-net-pcl" Version="1.4.118" />
     <PackageReference Include="SQLiteNetExtensions-netstandard" Version="2.0.0-alpha3" />
-    <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
     <PackageReference Include="Prism.Autofac.Forms" Version="7.0.0.396" />
+    <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +56,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\GamePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\SettingsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

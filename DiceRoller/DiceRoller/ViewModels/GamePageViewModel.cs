@@ -110,7 +110,8 @@ namespace DiceRoller.ViewModels
                 {
                     Source = ImageSource.FromResource(fullPath),
                     BindingContext = Game.Dice.ElementAt(i),
-                    Scale = 2.0
+                    HeightRequest = 36d,
+                    WidthRequest = 36d
                 };
 
 #pragma warning disable CS0618 // Type or member is obsolete
