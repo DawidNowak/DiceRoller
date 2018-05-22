@@ -37,6 +37,13 @@ namespace DiceRoller.DataAccess.Context
             _conn.InsertOrReplace(o);
         }
 
+        public T[] GetAll<T>() where T : Entity, new()
+        {
+            var entities = _conn.Table<T>().ToArray();
+            entities.ForEach(e => _includeActions[typeof(T)].Invoke(e));
+            return entities;
+        }
+
         public T GetById<T>(int id, bool eagerLoading = true) where T : Entity, new()
         {
             var entity = _conn.Table<T>().FirstOrDefault(x => x.Id == id);
@@ -45,7 +52,6 @@ namespace DiceRoller.DataAccess.Context
             _includeActions[typeof(T)].Invoke(entity);
             return entity;
         }
-
 
         private void IncludeGameRelations(Game game)
         {

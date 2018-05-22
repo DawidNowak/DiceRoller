@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:DiceRoller.Controls"
+             x:Class="DiceRoller.Views.GamePage">
+
+    <StackLayout Orientation="Vertical">
+        <Label Text="{Binding Path=Game.Name}" 
+                   FontSize="Medium" 
+                   HorizontalTextAlignment="Center"/>
+        <controls:WrapLayout x:Name="MinisLayout" 
+                                 Margin="20" 
+                                 ColumnSpacing="10" 
+                                 RowSpacing="10"/>
+        <StackLayout VerticalOptions="CenterAndExpand">
+            <controls:WrapLayout x:Name="DiceLayout" 
+                                     Margin="20" 
+                                     ColumnSpacing="10" 
+                                     RowSpacing="10"/>
+        </StackLayout>
+
+        <Button Text="Roll"
+                    Command="{Binding Path=RollCommand}"></Button>
+    </StackLayout>
+</ContentPage>
