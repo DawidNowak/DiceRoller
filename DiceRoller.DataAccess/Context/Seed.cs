@@ -23,7 +23,8 @@ namespace DiceRoller.DataAccess.Context
                 {
                     Id = 1,
                     GameId = 1,
-                    Path = "DiceRoller.Core.Images.MiceMystics."
+                    Path = "DiceRoller.Images.MiceMystics.",
+                    MiniImageSource = "mm_mini.jpg"
                 }
             };
 

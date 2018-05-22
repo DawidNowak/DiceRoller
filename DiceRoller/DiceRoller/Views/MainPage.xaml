@@ -2,10 +2,23 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DiceRoller.Views.MainPage"
+             x:Name="MainContentPage"
              Title="{Binding Title}">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Icon="ic_settings.png" Command="{Binding Path=SettingsNavigationCommand}"/>
+    </ContentPage.ToolbarItems>
+
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <Label Text="Welcome to Xamarin Forms and Prism!" />
+        <ListView x:Name="GamesView" ItemsSource="{Binding Path=Games}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding Path=Name}" 
+                              Command="{Binding Source={x:Reference MainContentPage}, Path=BindingContext.GameNavigationCommand}"
+                              CommandParameter="{Binding .}"></TextCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </StackLayout>
 
 </ContentPage>

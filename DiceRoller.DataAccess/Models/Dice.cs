@@ -11,6 +11,8 @@ namespace DiceRoller.DataAccess.Models
         public ICollection<DiceWall> Walls { get; set; }
         [MaxLength(50)]
         public string Path { get; set; }
+        [MaxLength(50)]
+        public string MiniImageSource { get; set; }
         [ForeignKey(typeof(Game))]
         public int GameId { get; set; }
         [ManyToOne]
