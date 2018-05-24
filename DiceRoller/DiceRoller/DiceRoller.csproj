@@ -12,11 +12,6 @@
     <None Remove="Images\MiceMystics\mm_shield_sword.jpg" />
     <None Remove="Images\MiceMystics\mm_shield_sword_surge.jpg" />
     <None Remove="Images\MiceMystics\mm_sword_surge.jpg" />
-    <None Remove="Images\res\mipmap-hdpi\ic_settings.png" />
-    <None Remove="Images\res\mipmap-mdpi\ic_settings.png" />
-    <None Remove="Images\res\mipmap-xhdpi\ic_settings.png" />
-    <None Remove="Images\res\mipmap-xxhdpi\ic_settings.png" />
-    <None Remove="Images\res\mipmap-xxxhdpi\ic_settings.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,11 +22,6 @@
     <EmbeddedResource Include="Images\MiceMystics\mm_shield_sword.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_shield_sword_surge.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_sword_surge.jpg" />
-    <EmbeddedResource Include="Images\res\mipmap-hdpi\ic_settings.png" />
-    <EmbeddedResource Include="Images\res\mipmap-mdpi\ic_settings.png" />
-    <EmbeddedResource Include="Images\res\mipmap-xhdpi\ic_settings.png" />
-    <EmbeddedResource Include="Images\res\mipmap-xxhdpi\ic_settings.png" />
-    <EmbeddedResource Include="Images\res\mipmap-xxxhdpi\ic_settings.png" />
   </ItemGroup>
 
   <ItemGroup>

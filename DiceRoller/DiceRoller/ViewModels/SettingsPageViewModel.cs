@@ -1,20 +1,34 @@
-﻿using Prism.Navigation;
+﻿using System;
+using DiceRoller.DataAccess.Context;
+using DiceRoller.DataAccess.Helpers;
+using DiceRoller.DataAccess.Models;
+using Prism.Navigation;
 
 namespace DiceRoller.ViewModels
 {
     public class SettingsPageViewModel : ViewModelBase
     {
-        public SettingsPageViewModel(INavigationService navigationService) : base(navigationService)
+        private readonly IContext _ctx;
+        private readonly Config _roll;
+
+        public SettingsPageViewModel(INavigationService navigationService, IContext ctx) : base(navigationService)
         {
+            _ctx = ctx;
+            _roll = _ctx.GetByFirstOrDefault<Config>(c => c.Key == Consts.RollAnimationKey);
+            AnimateRoll = Convert.ToBoolean(_roll.Value);
         }
 
-        private bool _animateRoll = true;
+        private bool _animateRoll;
 
         public bool AnimateRoll
         {
-            get => _animateRoll = true;
-            set => SetProperty(ref _animateRoll, value);
+            get => _animateRoll;
+            set
+            {
+                SetProperty(ref _animateRoll, value);
+                _roll.Value = value.ToString();
+                _ctx.InsertOrReplace(_roll);
+            }
         }
-
     }
 }
