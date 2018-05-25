@@ -1,4 +1,5 @@
-﻿using DiceRoller.DataAccess.Models;
+﻿using DiceRoller.DataAccess.Helpers;
+using DiceRoller.DataAccess.Models;
 using Xamarin.Forms.Internals;
 
 namespace DiceRoller.DataAccess.Context
@@ -23,7 +24,8 @@ namespace DiceRoller.DataAccess.Context
                 {
                     Id = 1,
                     GameId = 1,
-                    Path = "DiceRoller.Core.Images.MiceMystics."
+                    Path = "DiceRoller.Images.MiceMystics.",
+                    MiniImageSource = "mm_mini.jpg"
                 }
             };
 
@@ -49,6 +51,16 @@ namespace DiceRoller.DataAccess.Context
             });
 
             return walls;
+        }
+
+        public static Config[] GetConfigs()
+        {
+            var configs = new[]
+            {
+                new Config {Id = 1, Key = Consts.RollAnimationKey, Value = true.ToString()}
+            };
+
+            return configs;
         }
     }
 }

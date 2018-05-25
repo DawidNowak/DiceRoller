@@ -1,4 +1,5 @@
-﻿using DiceRoller.DataAccess.Context;
+﻿using System.Linq;
+using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
 using Prism;
 using Prism.Ioc;
@@ -37,6 +38,8 @@ namespace DiceRoller
         {
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage>();
+            containerRegistry.RegisterForNavigation<GamePage>();
+            containerRegistry.RegisterForNavigation<SettingsPage>();
 
             containerRegistry.RegisterSingleton<IContext, DiceContext>();
         }
@@ -46,20 +49,29 @@ namespace DiceRoller
             ctx.CreateTable<DiceWall>();
             ctx.CreateTable<Dice>();
             ctx.CreateTable<Game>();
+            ctx.CreateTable<Config>();
         }
 
         private void EnsureDbSeeded(IContext ctx)
         {
-            //I know it's awful but insert with children does not work(?)
+            //I know it's awful but insert with children does not works(?)
             //syntax error in sql
 
             var games = Seed.GetGames();
             var dice = Seed.GetDice();
             var walls = Seed.GetWalls();
+            var configs = Seed.GetConfigs();
 
             games.ForEach(ctx.InsertOrReplace);
             dice.ForEach(ctx.InsertOrReplace);
             walls.ForEach(ctx.InsertOrReplace);
+
+            var allConfigs = ctx.GetAll<Config>();
+            configs.ForEach(cfg =>
+            {
+                if (allConfigs.All(x => x.Key != cfg.Key))
+                    ctx.InsertOrReplace(cfg);
+            });
         }
     }
 }

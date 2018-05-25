@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using DiceRoller.DataAccess.Models;
 using SQLite;
 using Xamarin.Forms.Internals;
@@ -21,7 +22,8 @@ namespace DiceRoller.DataAccess.Context
             {
                 [typeof(Game)] = game => IncludeGameRelations((Game)game),
                 [typeof(Dice)] = dice => IncludeDiceRelations((Dice)dice),
-                [typeof(DiceWall)] = diceWall => IncludeDiceWallRelations((DiceWall)diceWall)
+                [typeof(DiceWall)] = diceWall => IncludeDiceWallRelations((DiceWall)diceWall),
+                [typeof(Config)] = cfg => { }
             };
         }
 
@@ -37,6 +39,13 @@ namespace DiceRoller.DataAccess.Context
             _conn.InsertOrReplace(o);
         }
 
+        public T[] GetAll<T>() where T : Entity, new()
+        {
+            var entities = _conn.Table<T>().ToArray();
+            entities.ForEach(e => _includeActions[typeof(T)]?.Invoke(e));
+            return entities;
+        }
+
         public T GetById<T>(int id, bool eagerLoading = true) where T : Entity, new()
         {
             var entity = _conn.Table<T>().FirstOrDefault(x => x.Id == id);
@@ -46,6 +55,15 @@ namespace DiceRoller.DataAccess.Context
             return entity;
         }
 
+        public IEnumerable<T> GetBy<T>(Expression<Func<T, bool>> where) where T : Entity, new()
+        {
+            return _conn.Table<T>().Where(where);
+        }
+
+        public T GetByFirstOrDefault<T>(Expression<Func<T, bool>> where) where T : Entity, new()
+        {
+            return GetBy(where).FirstOrDefault();
+        }
 
         private void IncludeGameRelations(Game game)
         {
