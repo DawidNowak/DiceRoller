@@ -23,12 +23,14 @@ namespace DiceRoller.ViewModels
         public bool AnimateRoll
         {
             get => _animateRoll;
-            set
-            {
-                SetProperty(ref _animateRoll, value);
-                _roll.Value = value.ToString();
-                _ctx.InsertOrReplace(_roll);
-            }
+            set => SetProperty(ref _animateRoll, value);
+        }
+
+        public override void OnNavigatedFrom(NavigationParameters parameters)
+        {
+            _roll.Value = _animateRoll.ToString();
+            _ctx.InsertOrReplace(_roll);
+            base.OnNavigatedFrom(parameters);
         }
     }
 }
