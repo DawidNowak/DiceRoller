@@ -5,6 +5,39 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Descent\black\four_shields.jpg" />
+    <None Remove="Images\Descent\black\mini.jpg" />
+    <None Remove="Images\Descent\black\no_shield.jpg" />
+    <None Remove="Images\Descent\black\three_shields.jpg" />
+    <None Remove="Images\Descent\black\two_shields.jpg" />
+    <None Remove="Images\Descent\blue\fail.jpg" />
+    <None Remove="Images\Descent\blue\five_dist_one_heart.jpg" />
+    <None Remove="Images\Descent\blue\four_dist_two_hearts.jpg" />
+    <None Remove="Images\Descent\blue\mini.jpg" />
+    <None Remove="Images\Descent\blue\six_dist_one_hearts_surge.jpg" />
+    <None Remove="Images\Descent\blue\three_dist_two_hearts.jpg" />
+    <None Remove="Images\Descent\blue\two_dist_two_hearts_surge.jpg" />
+    <None Remove="Images\Descent\brown\mini.jpg" />
+    <None Remove="Images\Descent\brown\no_shield.jpg" />
+    <None Remove="Images\Descent\brown\one_shield.jpg" />
+    <None Remove="Images\Descent\brown\two_shields.jpg" />
+    <None Remove="Images\Descent\gray\mini.jpg" />
+    <None Remove="Images\Descent\gray\no_shield.jpg" />
+    <None Remove="Images\Descent\gray\one_shield.jpg" />
+    <None Remove="Images\Descent\gray\three_shields.jpg" />
+    <None Remove="Images\Descent\gray\two_shields.jpg" />
+    <None Remove="Images\Descent\red\mini.jpg" />
+    <None Remove="Images\Descent\red\one_heart.jpg" />
+    <None Remove="Images\Descent\red\three_hearts.jpg" />
+    <None Remove="Images\Descent\red\three_hearts_surge.jpg" />
+    <None Remove="Images\Descent\red\two_hearts.jpg" />
+    <None Remove="Images\Descent\yellow\mini.jpg" />
+    <None Remove="Images\Descent\yellow\one_dist_one_heart.jpg" />
+    <None Remove="Images\Descent\yellow\one_dist_surge.jpg" />
+    <None Remove="Images\Descent\yellow\one_heart_surge.jpg" />
+    <None Remove="Images\Descent\yellow\two_dist_one_heart.jpg" />
+    <None Remove="Images\Descent\yellow\two_hearts.jpg" />
+    <None Remove="Images\Descent\yellow\two_hearts_surge.jpg" />
     <None Remove="Images\MiceMystics\mm_bow.jpg" />
     <None Remove="Images\MiceMystics\mm_bow_surge.jpg" />
     <None Remove="Images\MiceMystics\mm_cheese.jpg" />
@@ -15,6 +48,39 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Images\Descent\black\four_shields.jpg" />
+    <EmbeddedResource Include="Images\Descent\black\mini.jpg" />
+    <EmbeddedResource Include="Images\Descent\black\no_shield.jpg" />
+    <EmbeddedResource Include="Images\Descent\black\three_shields.jpg" />
+    <EmbeddedResource Include="Images\Descent\black\two_shields.jpg" />
+    <EmbeddedResource Include="Images\Descent\blue\fail.jpg" />
+    <EmbeddedResource Include="Images\Descent\blue\five_dist_one_heart.jpg" />
+    <EmbeddedResource Include="Images\Descent\blue\four_dist_two_hearts.jpg" />
+    <EmbeddedResource Include="Images\Descent\blue\mini.jpg" />
+    <EmbeddedResource Include="Images\Descent\blue\six_dist_one_hearts_surge.jpg" />
+    <EmbeddedResource Include="Images\Descent\blue\three_dist_two_hearts.jpg" />
+    <EmbeddedResource Include="Images\Descent\blue\two_dist_two_hearts_surge.jpg" />
+    <EmbeddedResource Include="Images\Descent\brown\mini.jpg" />
+    <EmbeddedResource Include="Images\Descent\brown\no_shield.jpg" />
+    <EmbeddedResource Include="Images\Descent\brown\one_shield.jpg" />
+    <EmbeddedResource Include="Images\Descent\brown\two_shields.jpg" />
+    <EmbeddedResource Include="Images\Descent\gray\mini.jpg" />
+    <EmbeddedResource Include="Images\Descent\gray\no_shield.jpg" />
+    <EmbeddedResource Include="Images\Descent\gray\one_shield.jpg" />
+    <EmbeddedResource Include="Images\Descent\gray\three_shields.jpg" />
+    <EmbeddedResource Include="Images\Descent\gray\two_shields.jpg" />
+    <EmbeddedResource Include="Images\Descent\red\mini.jpg" />
+    <EmbeddedResource Include="Images\Descent\red\one_heart.jpg" />
+    <EmbeddedResource Include="Images\Descent\red\three_hearts.jpg" />
+    <EmbeddedResource Include="Images\Descent\red\three_hearts_surge.jpg" />
+    <EmbeddedResource Include="Images\Descent\red\two_hearts.jpg" />
+    <EmbeddedResource Include="Images\Descent\yellow\mini.jpg" />
+    <EmbeddedResource Include="Images\Descent\yellow\one_dist_one_heart.jpg" />
+    <EmbeddedResource Include="Images\Descent\yellow\one_dist_surge.jpg" />
+    <EmbeddedResource Include="Images\Descent\yellow\one_heart_surge.jpg" />
+    <EmbeddedResource Include="Images\Descent\yellow\two_dist_one_heart.jpg" />
+    <EmbeddedResource Include="Images\Descent\yellow\two_hearts.jpg" />
+    <EmbeddedResource Include="Images\Descent\yellow\two_hearts_surge.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_bow.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_bow_surge.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_cheese.jpg" />
