@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DiceRoller.Controls;
+using DiceRoller.DataAccess.Context;
+using DiceRoller.DataAccess.Helpers;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Interfaces;
 using Prism.Commands;
@@ -14,15 +16,18 @@ namespace DiceRoller.ViewModels
 {
     public class GamePageViewModel : ViewModelBase
     {
+        private readonly IContext _ctx;
         private bool _canRoll = true;
+        private bool _animateRoll;
         private readonly ICollection<View> _minis;
 
         public IView View { get; set; }
         public DelegateCommand RollCommand { get; }
 
 
-        public GamePageViewModel(INavigationService navigationService) : base(navigationService)
+        public GamePageViewModel(IContext ctx, INavigationService navigationService) : base(navigationService)
         {
+            _ctx = ctx;
             Title = "Game View Model";
             RollCommand = new DelegateCommand(Roll, CanRoll);
             _minis = new List<View>();
@@ -47,33 +52,37 @@ namespace DiceRoller.ViewModels
         private async void Roll()
         {
             ChangeRollEnabled(false);
+            await AnimateRoll();
+            ChangeRollEnabled(true);
+        }
+
+        private async Task AnimateRoll()
+        {
             var dice = View?.Dice;
             var rand = new Random();
 
-            for (int delay = 160; delay < 520; delay+=40)
+            if (_animateRoll)
             {
-                dice.ForEach(async d =>
+                for (var delay = 160; delay < 520; delay += 40)
                 {
-                    var diceCtx = (Dice)d.BindingContext;
-                    if (rand.Next(0, 4) == 0)
-                    {
-                        await Task.Delay(100);
-                    }
-                    else
-                    {
-                        await d.FadeTo(0, 50);
-                        ((SwipeableImage)d).Source = ImageSource.FromResource(diceCtx.Path +
-                                                                              diceCtx.Walls.ElementAt(rand.Next(0, diceCtx.Walls.Count))
-                                                                                  .ImageSource);
-                        await d.FadeTo(1, 50);
-                    }
-
-                    
-                });
-                await Task.Delay(delay);
+                    await FlipDice(dice, rand, delay);
+                }
             }
+            else await FlipDice(dice, rand);
+        }
 
-            ChangeRollEnabled(true);
+        private static async Task FlipDice(IList<View> dice, Random rand, int delay = 0)
+        {
+            dice.ForEach(async d =>
+            {
+                var diceCtx = (Dice)d.BindingContext;
+                await d.FadeTo(0, 50);
+                ((SwipeableImage)d).Source = ImageSource.FromResource(diceCtx.Path +
+                                                                      diceCtx.Walls.ElementAt(rand.Next(0, diceCtx.Walls.Count))
+                                                                          .ImageSource);
+                await d.FadeTo(1, 50);
+            });
+            await Task.Delay(delay);
         }
 
         private void ChangeRollEnabled(bool canRoll)
@@ -97,6 +106,8 @@ namespace DiceRoller.ViewModels
             Game = (Game)parameters["game"];
             PopulateDiceMinis();
             base.OnNavigatedTo(parameters);
+            var animateKey = _ctx.GetByFirstOrDefault<Config>(x => x.Key == Consts.RollAnimationKey);
+            _animateRoll = Convert.ToBoolean(animateKey.Value);
         }
 
         private void PopulateDiceMinis()
