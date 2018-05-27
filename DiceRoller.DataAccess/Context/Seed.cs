@@ -136,7 +136,8 @@ namespace DiceRoller.DataAccess.Context
         {
             var configs = new[]
             {
-                new Config {Key = Consts.RollAnimationKey, Value = true.ToString()}
+                new Config {Key = Consts.RollAnimationKey, Value = true.ToString()},
+                new Config {Key = Consts.SaveDiceStateKey, Value = true.ToString()}
             };
 
             GiveIds(configs);

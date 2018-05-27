@@ -2,21 +2,27 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DiceRoller.Views.SettingsPage">
+
     <ContentPage.Content>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
-            
-            <Label Text="Roll animation"/>
-            <Switch Grid.Column="1" Grid.Row="0" IsToggled="{Binding AnimateRoll}"/>
-        </Grid>
+        <StackLayout Orientation="Vertical">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Label Text="Roll animation"/>
+                <Switch Grid.Column="1" Grid.Row="0" IsToggled="{Binding AnimateRoll}"/>
+
+                <Label Grid.Row="1" Text="Save dice sets states"/>
+                <Switch Grid.Column="1" Grid.Row="1" IsToggled="{Binding SaveDiceState}"/>
+            </Grid>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>
