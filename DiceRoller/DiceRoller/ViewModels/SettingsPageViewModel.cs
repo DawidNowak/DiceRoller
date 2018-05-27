@@ -9,6 +9,8 @@ namespace DiceRoller.ViewModels
 {
     public class SettingsPageViewModel : ViewModelBase
     {
+
+        //TODO: REFACTOR THIS TO BE MORE REUSABLE FOR EACH CONFIG KEY
         private readonly IContext _ctx;
         private readonly Config _rollCfg;
         private readonly Config _saveStateCfg;

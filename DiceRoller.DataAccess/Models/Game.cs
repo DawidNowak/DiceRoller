@@ -12,5 +12,8 @@ namespace DiceRoller.DataAccess.Models
 
         [OneToMany(CascadeOperations = CascadeOperation.All)]
         public ICollection<Dice> Dice { get; set; }
+
+        [MaxLength(70)]
+        public string DiceSet { get; set; }
     }
 }

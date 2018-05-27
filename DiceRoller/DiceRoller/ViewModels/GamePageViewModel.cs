@@ -19,6 +19,7 @@ namespace DiceRoller.ViewModels
         private readonly IContext _ctx;
         private bool _canRoll = true;
         private bool _animateRoll;
+        private bool _saveState;
         private readonly ICollection<View> _minis;
 
         public IView View { get; set; }
@@ -34,7 +35,6 @@ namespace DiceRoller.ViewModels
         }
 
         private Game _game;
-
         public Game Game
         {
             get => _game;
@@ -42,11 +42,74 @@ namespace DiceRoller.ViewModels
         }
 
         private int _diceNumber;
-
         public int DiceNumber
         {
             get => _diceNumber;
             set => SetProperty(ref _diceNumber, value);
+        }
+
+        public override void OnNavigatedTo(NavigationParameters parameters)
+        {
+            Game = (Game)parameters["game"];
+            PopulateDiceMinis();
+            var animateKey = _ctx.GetByFirstOrDefault<Config>(x => x.Key == Consts.RollAnimationKey);
+            _animateRoll = Convert.ToBoolean(animateKey.Value);
+            var saveStateKey = _ctx.GetByFirstOrDefault<Config>(x => x.Key == Consts.SaveDiceStateKey);
+            _saveState = Convert.ToBoolean(saveStateKey.Value);
+            if (_saveState) LoadDiceSet();
+            base.OnNavigatedTo(parameters);
+        }
+
+        private void PopulateDiceMinis()
+        {
+            var minis = Game.Dice.Select(d => d.MiniImageSource).ToArray();
+
+            for (var i = 0; i < minis.Length; i++)
+            {
+                var fullPath = $"{Game.Dice.ElementAt(i).Path}{minis[i]}";
+                var img = new Image
+                {
+                    Source = ImageSource.FromResource(fullPath),
+                    BindingContext = Game.Dice.ElementAt(i),
+                    HeightRequest = 36d,
+                    WidthRequest = 36d
+                };
+
+#pragma warning disable CS0618 // Type or member is obsolete
+                img.GestureRecognizers.Add(new TapGestureRecognizer(view =>
+                {
+                    AddDice((Dice)((Image)view).Source.BindingContext);
+                }));
+#pragma warning restore CS0618 // Type or member is obsolete
+
+                _minis.Add(img);
+            }
+
+            View?.RefreshMinis(_minis);
+        }
+
+        public override void OnNavigatedFrom(NavigationParameters parameters)
+        {
+            if (_saveState)
+            {
+                var setIds = string.Join(";", View?.Dice.Select(d => ((Dice)d.BindingContext).Id.ToString()));
+                Game.DiceSet = setIds;
+                _ctx.InsertOrReplace(Game);
+            }
+            base.OnNavigatedFrom(parameters);
+        }
+
+        private void LoadDiceSet()
+        {
+            if (string.IsNullOrEmpty(Game.DiceSet)) return;
+
+            var diceIds = Game.DiceSet.Split(';');
+            diceIds.ForEach(id =>
+            {
+                var intId = Convert.ToInt32(id);
+                var toAdd = _ctx.GetById<Dice>(intId);
+                AddDice(toAdd);
+            });
         }
 
         private async void Roll()
@@ -99,43 +162,6 @@ namespace DiceRoller.ViewModels
 
             DiceNumber++;
             View?.AddDice(toAdd);
-        }
-
-        public override void OnNavigatedTo(NavigationParameters parameters)
-        {
-            Game = (Game)parameters["game"];
-            PopulateDiceMinis();
-            base.OnNavigatedTo(parameters);
-            var animateKey = _ctx.GetByFirstOrDefault<Config>(x => x.Key == Consts.RollAnimationKey);
-            _animateRoll = Convert.ToBoolean(animateKey.Value);
-        }
-
-        private void PopulateDiceMinis()
-        {
-            var minis = Game.Dice.Select(d => d.MiniImageSource).ToArray();
-
-            for (int i = 0; i < minis.Length; i++)
-            {
-                var fullPath = $"{Game.Dice.ElementAt(i).Path}{minis[i]}";
-                var img = new Image
-                {
-                    Source = ImageSource.FromResource(fullPath),
-                    BindingContext = Game.Dice.ElementAt(i),
-                    HeightRequest = 36d,
-                    WidthRequest = 36d
-                };
-
-#pragma warning disable CS0618 // Type or member is obsolete
-                img.GestureRecognizers.Add(new TapGestureRecognizer(view =>
-                {
-                    AddDice((Dice)((Image)view).Source.BindingContext);
-                }));
-#pragma warning restore CS0618 // Type or member is obsolete
-
-                _minis.Add(img);
-            }
-
-            View?.RefreshMinis(_minis);
         }
     }
 }
