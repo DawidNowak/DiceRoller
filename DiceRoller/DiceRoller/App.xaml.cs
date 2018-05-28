@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
 using Prism;
@@ -52,25 +55,34 @@ namespace DiceRoller
             ctx.CreateTable<Config>();
         }
 
+        private IDictionary<Type, Func<Entity[]>> _seedDict = new Dictionary<Type, Func<Entity[]>>();
+
+
         private void EnsureDbSeeded(IContext ctx)
         {
-            //I know it's awful but insert with children does not works(?)
-            //syntax error in sql
+            _seedDict[typeof(Game)] = () => Seed.GetGames();
+            _seedDict[typeof(Dice)] = () => Seed.GetDice();
+            _seedDict[typeof(DiceWall)] = () => Seed.GetWalls();
+            _seedDict[typeof(Config)] = () => Seed.GetConfigs();
 
-            var games = Seed.GetGames();
-            var dice = Seed.GetDice();
-            var walls = Seed.GetWalls();
-            var configs = Seed.GetConfigs();
-
-            games.ForEach(ctx.InsertOrReplace);
-            dice.ForEach(ctx.InsertOrReplace);
-            walls.ForEach(ctx.InsertOrReplace);
-
-            var allConfigs = ctx.GetAll<Config>();
-            configs.ForEach(cfg =>
+            var info = GetType().GetMethod("InsertNotExisting", BindingFlags.Instance | BindingFlags.NonPublic);
+            
+            _seedDict.ForEach(pair =>
             {
-                if (allConfigs.All(x => x.Key != cfg.Key))
-                    ctx.InsertOrReplace(cfg);
+                var generic = info?.MakeGenericMethod(pair.Key);
+                generic?.Invoke(this, new object[] {ctx});
+            });
+
+        }
+
+        private void InsertNotExisting<T>(IContext ctx) where T : Entity, new()
+        {
+            var all = ctx.GetAll<T>();
+            var arr = _seedDict[typeof(T)].Invoke();
+            arr.ForEach(o =>
+            {
+                if (all.All(x => x.Id != o.Id))
+                    ctx.InsertOrReplace(o);
             });
         }
     }

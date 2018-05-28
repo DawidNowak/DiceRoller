@@ -6,6 +6,7 @@ using DiceRoller.Controls;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Helpers;
 using DiceRoller.DataAccess.Models;
+using DiceRoller.Extensions;
 using DiceRoller.Interfaces;
 using Prism.Commands;
 using Prism.Navigation;
@@ -52,10 +53,11 @@ namespace DiceRoller.ViewModels
         {
             Game = (Game)parameters["game"];
             PopulateDiceMinis();
-            var animateKey = _ctx.GetByFirstOrDefault<Config>(x => x.Key == Consts.RollAnimationKey);
-            _animateRoll = Convert.ToBoolean(animateKey.Value);
-            var saveStateKey = _ctx.GetByFirstOrDefault<Config>(x => x.Key == Consts.SaveDiceStateKey);
-            _saveState = Convert.ToBoolean(saveStateKey.Value);
+            var configs = _ctx.GetAll<Config>();
+            var animateKey = configs.First(x => x.Key == Consts.RollAnimationKey);
+            _animateRoll = animateKey.Value.ToBoolean();
+            var saveStateKey = configs.First(x => x.Key == Consts.SaveDiceStateKey);
+            _saveState = saveStateKey.Value.ToBoolean();
             if (_saveState) LoadDiceSet();
             base.OnNavigatedTo(parameters);
         }
@@ -92,7 +94,7 @@ namespace DiceRoller.ViewModels
         {
             if (_saveState)
             {
-                var setIds = string.Join(";", View?.Dice.Select(d => ((Dice)d.BindingContext).Id.ToString()));
+                var setIds = string.Join(Consts.IdsSeparator.ToString(), View?.Dice.Select(d => ((Dice)d.BindingContext).Id.ToString()));
                 Game.DiceSet = setIds;
                 _ctx.InsertOrReplace(Game);
             }
@@ -103,7 +105,7 @@ namespace DiceRoller.ViewModels
         {
             if (string.IsNullOrEmpty(Game.DiceSet)) return;
 
-            var diceIds = Game.DiceSet.Split(';');
+            var diceIds = Game.DiceSet.Split(Consts.IdsSeparator);
             diceIds.ForEach(id =>
             {
                 var intId = Convert.ToInt32(id);

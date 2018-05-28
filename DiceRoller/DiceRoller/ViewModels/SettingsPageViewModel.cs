@@ -1,52 +1,51 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Helpers;
 using DiceRoller.DataAccess.Models;
+using DiceRoller.Extensions;
 using Prism.Navigation;
+using Xamarin.Forms.Internals;
 
 namespace DiceRoller.ViewModels
 {
     public class SettingsPageViewModel : ViewModelBase
     {
-
-        //TODO: REFACTOR THIS TO BE MORE REUSABLE FOR EACH CONFIG KEY
         private readonly IContext _ctx;
-        private readonly Config _rollCfg;
-        private readonly Config _saveStateCfg;
+        private readonly IDictionary<string, Config> _configs;
 
         public SettingsPageViewModel(INavigationService navigationService, IContext ctx) : base(navigationService)
         {
             _ctx = ctx;
-            var configs = _ctx.GetAll<Config>();
-            _rollCfg = configs.First(c => c.Key == Consts.RollAnimationKey);
-            _saveStateCfg = configs.First(c => c.Key == Consts.SaveDiceStateKey);
-            AnimateRoll = Convert.ToBoolean(_rollCfg.Value);
-            SaveDiceState = Convert.ToBoolean(_saveStateCfg.Value);
+            _configs = new Dictionary<string, Config>();
+            _ctx.GetAll<Config>().ForEach(cfg => { _configs[cfg.Key] = cfg; });
+            AnimateRoll =_configs[Consts.RollAnimationKey].Value.ToBoolean();
+            SaveDiceState = _configs[Consts.SaveDiceStateKey].Value.ToBoolean();
         }
-
-
-        private bool _animateRoll;
 
         public bool AnimateRoll
         {
-            get => _animateRoll;
-            set => SetProperty(ref _animateRoll, value);
+            get => _configs[Consts.RollAnimationKey].Value.ToBoolean();
+            set
+            {
+                _configs[Consts.RollAnimationKey].Value = value.ToString();
+                RaisePropertyChanged();
+            }
         }
 
-        private bool _saveState;
         public bool SaveDiceState
         {
-            get => _saveState;
-            set => SetProperty(ref _saveState, value);
+            get => _configs[Consts.SaveDiceStateKey].Value.ToBoolean();
+            set
+            {
+                _configs[Consts.SaveDiceStateKey].Value = value.ToString();
+                RaisePropertyChanged();
+            }
         }
 
         public override void OnNavigatedFrom(NavigationParameters parameters)
         {
-            _rollCfg.Value = _animateRoll.ToString();
-            _saveStateCfg.Value = _saveState.ToString();
-            _ctx.InsertOrReplace(_rollCfg);
-            _ctx.InsertOrReplace(_saveStateCfg);
+            _configs.ForEach(pair => _ctx.InsertOrReplace(pair.Value));
             base.OnNavigatedFrom(parameters);
         }
     }
