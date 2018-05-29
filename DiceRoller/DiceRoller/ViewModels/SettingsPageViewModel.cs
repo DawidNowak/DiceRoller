@@ -19,8 +19,6 @@ namespace DiceRoller.ViewModels
             _ctx = ctx;
             _configs = new Dictionary<string, Config>();
             _ctx.GetAll<Config>().ForEach(cfg => { _configs[cfg.Key] = cfg; });
-            AnimateRoll =_configs[Consts.RollAnimationKey].Value.ToBoolean();
-            SaveDiceState = _configs[Consts.SaveDiceStateKey].Value.ToBoolean();
         }
 
         public bool AnimateRoll
@@ -28,7 +26,7 @@ namespace DiceRoller.ViewModels
             get => _configs[Consts.RollAnimationKey].Value.ToBoolean();
             set
             {
-                _configs[Consts.RollAnimationKey].Value = value.ToString();
+                UpdateConfigKeyValue(Consts.RollAnimationKey, value.ToString());
                 RaisePropertyChanged();
             }
         }
@@ -38,15 +36,16 @@ namespace DiceRoller.ViewModels
             get => _configs[Consts.SaveDiceStateKey].Value.ToBoolean();
             set
             {
-                _configs[Consts.SaveDiceStateKey].Value = value.ToString();
+                UpdateConfigKeyValue(Consts.SaveDiceStateKey, value.ToString());
                 RaisePropertyChanged();
             }
         }
 
-        public override void OnNavigatedFrom(NavigationParameters parameters)
+        private void UpdateConfigKeyValue(string key, string value)
         {
-            _configs.ForEach(pair => _ctx.InsertOrReplace(pair.Value));
-            base.OnNavigatedFrom(parameters);
+            var cfg = _configs[key];
+            cfg.Value = value;
+            _ctx.InsertOrReplace(cfg);
         }
     }
 }

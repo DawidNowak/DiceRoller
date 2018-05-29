@@ -39,10 +39,13 @@ namespace DiceRoller
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            //TODO: CHANGE THIS TO REFLECTION ASSEMBLY.GETTYPES
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage>();
             containerRegistry.RegisterForNavigation<GamePage>();
+            containerRegistry.RegisterForNavigation<InfoPage>();
             containerRegistry.RegisterForNavigation<SettingsPage>();
+            containerRegistry.RegisterForNavigation<AboutPage>();
 
             containerRegistry.RegisterSingleton<IContext, DiceContext>();
         }

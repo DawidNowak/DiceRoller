@@ -6,7 +6,7 @@
              Title="{Binding Title}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="ic_settings.png" Command="{Binding Path=SettingsNavigationCommand}"/>
+        <ToolbarItem Icon="ic_settings.png" Command="{Binding Path=InfoNavigationCommand}"/>
     </ContentPage.ToolbarItems>
 
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
