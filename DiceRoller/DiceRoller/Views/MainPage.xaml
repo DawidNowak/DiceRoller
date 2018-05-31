@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:controls="clr-namespace:DiceRoller.Controls;assembly=DiceRoller"
-             xmlns:converters="clr-namespace:DiceRoller.Converters;assembly=DiceRoller"
+             xmlns:controls="clr-namespace:DiceRoller.Controls"
+             xmlns:converters="clr-namespace:DiceRoller.Converters"
              x:Class="DiceRoller.Views.MainPage"
              x:Name="MainContentPage"
              Title="{Binding Title}">
@@ -18,13 +18,12 @@
     </ContentPage.ToolbarItems>
 
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <ListView x:Name="GamesListView" ItemsSource="{Binding Path=Games}">
+        <ListView x:Name="GamesListView" ItemsSource="{Binding Path=Games}" RowHeight="100">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <controls:GameViewCell Command="{Binding Source={x:Reference MainContentPage}, Path=BindingContext.GameNavigationCommand}"
                                                 CommandParameter="{Binding .}">
-                        <Image Source="{Binding ., Converter={StaticResource GameToImageSourceConverter}}"
-                               HeightRequest="36d"/>
+                        <Image Source="{Binding ., Converter={StaticResource GameToImageSourceConverter}}"/>
                     </controls:GameViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
