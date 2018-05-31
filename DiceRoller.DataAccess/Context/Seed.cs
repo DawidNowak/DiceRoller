@@ -12,7 +12,7 @@ namespace DiceRoller.DataAccess.Context
             var games = new[]
             {
                 new Game {Name = "Mice and Mystics", Path = "DiceRoller.Images.MiceMystics.", LogoImageSource = "logo.jpg"},
-                new Game {Name = "Descent 2nd ed.", Path = "DiceRoller.Images.Descent.", LogoImageSource = "logo.jpg"}
+                new Game {Name = "Descent: Journeys in the Dark (2nd edition)", Path = "DiceRoller.Images.Descent.", LogoImageSource = "logo.jpg"}
             };
 
             GiveIds(games);

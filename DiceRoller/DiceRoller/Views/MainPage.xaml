@@ -17,8 +17,9 @@
         <ToolbarItem Icon="ic_settings.png" Command="{Binding Path=InfoNavigationCommand}"/>
     </ContentPage.ToolbarItems>
 
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <ListView x:Name="GamesListView" ItemsSource="{Binding Path=Games}" RowHeight="100">
+    <StackLayout HorizontalOptions="CenterAndExpand">
+        <Entry Placeholder="filter games..." Text="{Binding FilterText}"/>
+        <ListView x:Name="GamesListView" ItemsSource="{Binding Path=Games, Mode=TwoWay}" VerticalOptions="CenterAndExpand" RowHeight="100">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <controls:GameViewCell Command="{Binding Source={x:Reference MainContentPage}, Path=BindingContext.GameNavigationCommand}"
