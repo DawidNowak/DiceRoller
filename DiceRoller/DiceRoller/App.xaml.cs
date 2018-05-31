@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
 using Prism;
@@ -39,7 +40,6 @@ namespace DiceRoller
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            //TODO: CHANGE THIS TO REFLECTION ASSEMBLY.GETTYPES
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage>();
             containerRegistry.RegisterForNavigation<GamePage>();

@@ -31,7 +31,7 @@ namespace DiceRoller.Views
             var rand = new Random();
             var diceImg = new SwipeableImage
             {
-                Source = ImageSource.FromResource(mini.Path + mini.Walls.ElementAt(rand.Next(0, mini.Walls.Count)).ImageSource),
+                Source = ImageSource.FromResource(((GamePageViewModel)BindingContext).Game.Path + mini.Path + mini.Walls.ElementAt(rand.Next(0, mini.Walls.Count)).ImageSource),
                 BindingContext = mini,
                 HeightRequest = 64d,
                 WidthRequest = 64d

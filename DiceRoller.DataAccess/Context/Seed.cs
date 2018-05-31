@@ -11,8 +11,8 @@ namespace DiceRoller.DataAccess.Context
         {
             var games = new[]
             {
-                new Game {Name = "Mice and Mystics"},
-                new Game {Name = "Descent 2nd ed."}
+                new Game {Name = "Mice and Mystics", Path = "DiceRoller.Images.MiceMystics.", LogoImageSource = "logo.jpg"},
+                new Game {Name = "Descent 2nd ed.", Path = "DiceRoller.Images.Descent.", LogoImageSource = "logo.jpg"}
             };
 
             GiveIds(games);
@@ -27,43 +27,43 @@ namespace DiceRoller.DataAccess.Context
                 new Dice
                 {
                     GameId = 1,
-                    Path = "DiceRoller.Images.MiceMystics.",
+                    Path = "",
                     MiniImageSource = "mm_mini.jpg"
                 },
                 new Dice
                 {
                     GameId = 2,
-                    Path = "DiceRoller.Images.Descent.yellow.",
+                    Path = "yellow.",
                     MiniImageSource = "mini.jpg"
                 },
                 new Dice
                 {
                     GameId = 2,
-                    Path = "DiceRoller.Images.Descent.red.",
+                    Path = "red.",
                     MiniImageSource = "mini.jpg"
                 },
                 new Dice
                 {
                     GameId = 2,
-                    Path = "DiceRoller.Images.Descent.blue.",
+                    Path = "blue.",
                     MiniImageSource = "mini.jpg"
                 },
                 new Dice
                 {
                     GameId = 2,
-                    Path = "DiceRoller.Images.Descent.brown.",
+                    Path = "brown.",
                     MiniImageSource = "mini.jpg"
                 },
                 new Dice
                 {
                     GameId = 2,
-                    Path = "DiceRoller.Images.Descent.gray.",
+                    Path = "gray.",
                     MiniImageSource = "mini.jpg"
                 },
                 new Dice
                 {
                     GameId = 2,
-                    Path = "DiceRoller.Images.Descent.black.",
+                    Path = "black.",
                     MiniImageSource = "mini.jpg"
                 }
             };

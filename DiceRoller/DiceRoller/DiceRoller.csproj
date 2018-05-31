@@ -26,6 +26,7 @@
     <None Remove="Images\Descent\gray\one_shield.jpg" />
     <None Remove="Images\Descent\gray\three_shields.jpg" />
     <None Remove="Images\Descent\gray\two_shields.jpg" />
+    <None Remove="Images\Descent\logo.jpg" />
     <None Remove="Images\Descent\red\mini.jpg" />
     <None Remove="Images\Descent\red\one_heart.jpg" />
     <None Remove="Images\Descent\red\three_hearts.jpg" />
@@ -38,6 +39,7 @@
     <None Remove="Images\Descent\yellow\two_dist_one_heart.jpg" />
     <None Remove="Images\Descent\yellow\two_hearts.jpg" />
     <None Remove="Images\Descent\yellow\two_hearts_surge.jpg" />
+    <None Remove="Images\MiceMystics\logo.jpg" />
     <None Remove="Images\MiceMystics\mm_bow.jpg" />
     <None Remove="Images\MiceMystics\mm_bow_surge.jpg" />
     <None Remove="Images\MiceMystics\mm_cheese.jpg" />
@@ -69,6 +71,7 @@
     <EmbeddedResource Include="Images\Descent\gray\one_shield.jpg" />
     <EmbeddedResource Include="Images\Descent\gray\three_shields.jpg" />
     <EmbeddedResource Include="Images\Descent\gray\two_shields.jpg" />
+    <EmbeddedResource Include="Images\Descent\logo.jpg" />
     <EmbeddedResource Include="Images\Descent\red\mini.jpg" />
     <EmbeddedResource Include="Images\Descent\red\one_heart.jpg" />
     <EmbeddedResource Include="Images\Descent\red\three_hearts.jpg" />
@@ -81,6 +84,7 @@
     <EmbeddedResource Include="Images\Descent\yellow\two_dist_one_heart.jpg" />
     <EmbeddedResource Include="Images\Descent\yellow\two_hearts.jpg" />
     <EmbeddedResource Include="Images\Descent\yellow\two_hearts_surge.jpg" />
+    <EmbeddedResource Include="Images\MiceMystics\logo.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_bow.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_bow_surge.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_cheese.jpg" />

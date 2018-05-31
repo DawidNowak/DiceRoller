@@ -68,7 +68,7 @@ namespace DiceRoller.ViewModels
 
             for (var i = 0; i < minis.Length; i++)
             {
-                var fullPath = $"{Game.Dice.ElementAt(i).Path}{minis[i]}";
+                var fullPath = $"{Game.Path}{Game.Dice.ElementAt(i).Path}{minis[i]}";
                 var img = new Image
                 {
                     Source = ImageSource.FromResource(fullPath),
@@ -142,7 +142,7 @@ namespace DiceRoller.ViewModels
             {
                 var diceCtx = (Dice)d.BindingContext;
                 await d.FadeTo(0, 50);
-                ((SwipeableImage)d).Source = ImageSource.FromResource(diceCtx.Path +
+                ((SwipeableImage)d).Source = ImageSource.FromResource(diceCtx.Game.Path + diceCtx.Path +
                                                                       diceCtx.Walls.ElementAt(rand.Next(0, diceCtx.Walls.Count))
                                                                           .ImageSource);
                 await d.FadeTo(1, 50);
