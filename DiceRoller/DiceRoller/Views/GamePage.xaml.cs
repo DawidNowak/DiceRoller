@@ -11,7 +11,7 @@ using Xamarin.Forms.Internals;
 namespace DiceRoller.Views
 {
     //[XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class GamePage : ContentPage, IView
+    public partial class GamePage : ContentPage, IGameView
     {
         public GamePage()
         {
@@ -56,6 +56,12 @@ namespace DiceRoller.Views
         {
             MinisLayout.Children.Clear();
             minis.ForEach(m => MinisLayout.Children.Add(m));
+        }
+
+        protected override void OnDisappearing()
+        {
+            ((GamePageViewModel)BindingContext).OnDisappearing();
+            base.OnDisappearing();
         }
     }
 }

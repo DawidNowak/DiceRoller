@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
+using DiceRoller.Views;
 using Prism.Commands;
 using Prism.Navigation;
 using Xamarin.Forms.Internals;
@@ -11,20 +12,20 @@ namespace DiceRoller.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
+        private readonly IContext _ctx;
         private readonly IList<Game> _games;
 
         public ObservableCollection<Game> Games { get; set; } = new ObservableCollection<Game>();
 
         public DelegateCommand<Game> GameNavigationCommand { get; }
-        public DelegateCommand InfoNavigationCommand { get; }
 
         public MainPageViewModel(INavigationService navigationService, IContext ctx)
             : base(navigationService)
         {
+            _ctx = ctx;
             Title = "Main Page";
 
             GameNavigationCommand = new DelegateCommand<Game>(navigate);
-            InfoNavigationCommand = new DelegateCommand(navigateToInfo);
 
             _games = new List<Game>();
             ctx.GetAll<Game>().OrderBy(g => g.Name).ForEach(g =>
@@ -54,15 +55,13 @@ namespace DiceRoller.ViewModels
             base.OnNavigatedFrom(parameters);
         }
 
-        private async void navigate(Game game)
+        private void navigate(Game game)
         {
-            var param = new NavigationParameters { { "game", game } };
-            await NavigationService.NavigateAsync("GamePage", param);
-        }
+            var vm = new GamePageViewModel(_ctx, NavigationService) {Game = game};
+            var page = new GamePage { BindingContext = vm };
 
-        private async void navigateToInfo()
-        {
-            await NavigationService.NavigateAsync("InfoPage");
+            App.MasterDetail.Detail.Navigation.PushAsync(page);
+            vm.SetView();
         }
     }
 }

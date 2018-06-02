@@ -6,6 +6,7 @@
 
     <ContentPage.Content>
         <StackLayout Orientation="Vertical">
+            <Label>Settings</Label>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>

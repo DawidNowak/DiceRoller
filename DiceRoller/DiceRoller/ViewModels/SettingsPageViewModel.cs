@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Helpers;
 using DiceRoller.DataAccess.Models;

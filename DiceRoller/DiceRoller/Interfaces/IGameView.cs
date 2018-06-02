@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace DiceRoller.Interfaces
 {
-    public interface IView
+    public interface IGameView
     {
         IList<View> Dice { get; }
         void AddDice(Dice mini);

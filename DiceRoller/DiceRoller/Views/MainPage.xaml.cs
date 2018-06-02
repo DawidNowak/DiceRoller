@@ -6,7 +6,7 @@ namespace DiceRoller.Views
 	{
 		public MainPage ()
 		{
-			InitializeComponent ();
+            InitializeComponent ();
 		}
 	}
 }

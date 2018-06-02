@@ -23,7 +23,7 @@ namespace DiceRoller.ViewModels
         private bool _saveState;
         private readonly ICollection<View> _minis;
 
-        public IView View { get; set; }
+        public IGameView View { get; set; }
         public DelegateCommand RollCommand { get; }
 
 
@@ -47,19 +47,6 @@ namespace DiceRoller.ViewModels
         {
             get => _diceNumber;
             set => SetProperty(ref _diceNumber, value);
-        }
-
-        public override void OnNavigatedTo(NavigationParameters parameters)
-        {
-            Game = (Game)parameters["game"];
-            PopulateDiceMinis();
-            var configs = _ctx.GetAll<Config>();
-            var animateKey = configs.First(x => x.Key == Consts.RollAnimationKey);
-            _animateRoll = animateKey.Value.ToBoolean();
-            var saveStateKey = configs.First(x => x.Key == Consts.SaveDiceStateKey);
-            _saveState = saveStateKey.Value.ToBoolean();
-            if (_saveState) LoadDiceSet();
-            base.OnNavigatedTo(parameters);
         }
 
         private void PopulateDiceMinis()
@@ -88,17 +75,6 @@ namespace DiceRoller.ViewModels
             }
 
             View?.RefreshMinis(_minis);
-        }
-
-        public override void OnNavigatedFrom(NavigationParameters parameters)
-        {
-            if (_saveState)
-            {
-                var setIds = string.Join(Consts.IdsSeparator.ToString(), View?.Dice.Select(d => ((Dice)d.BindingContext).Id.ToString()));
-                Game.DiceSet = setIds;
-                _ctx.InsertOrReplace(Game);
-            }
-            base.OnNavigatedFrom(parameters);
         }
 
         private void LoadDiceSet()
@@ -164,6 +140,25 @@ namespace DiceRoller.ViewModels
 
             DiceNumber++;
             View?.AddDice(toAdd);
+        }
+
+        public void SetView()
+        {
+            PopulateDiceMinis();
+            var configs = _ctx.GetAll<Config>();
+            _saveState = configs.First(x => x.Key == Consts.SaveDiceStateKey).Value.ToBoolean();
+            _animateRoll = configs.First(x => x.Key == Consts.RollAnimationKey).Value.ToBoolean();
+            if (_saveState) LoadDiceSet();
+        }
+
+        public void OnDisappearing()
+        {
+            if (_ctx.GetAll<Config>().First(x => x.Key == Consts.SaveDiceStateKey).Value.ToBoolean())
+            {
+                var setIds = string.Join(Consts.IdsSeparator.ToString(), View?.Dice.Select(d => ((Dice)d.BindingContext).Id.ToString()));
+                Game.DiceSet = setIds;
+                _ctx.InsertOrReplace(Game);
+            }
         }
     }
 }

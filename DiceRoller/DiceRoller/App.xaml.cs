@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
 using Prism;
@@ -11,6 +10,7 @@ using DiceRoller.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Prism.Autofac;
+using Prism.Navigation;
 using Xamarin.Forms.Internals;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -18,11 +18,8 @@ namespace DiceRoller
 {
     public partial class App : PrismApplication
     {
-        /* 
-         * The Xamarin Forms XAML Previewer in Visual Studio uses System.Activator.CreateInstance.
-         * This imposes a limitation in which the App class must have a default constructor. 
-         * App(IPlatformInitializer initializer = null) cannot be handled by the Activator.
-         */
+        public static MasterDetailPage MasterDetail { get; set; }
+        public static IContainerProvider GlobalContainer;
         public App() : this(null) { }
 
         public App(IPlatformInitializer initializer) : base(initializer) { }
@@ -30,12 +27,13 @@ namespace DiceRoller
         protected override async void OnInitialized()
         {
             InitializeComponent();
+            GlobalContainer = Container;
 
             var ctx = Container.Resolve<IContext>();
             EnsureDbCreated(ctx);
             EnsureDbSeeded(ctx);
 
-             await NavigationService.NavigateAsync("NavigationPage/MainPage");
+             await NavigationService.NavigateAsync("MasterDetailsPage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -46,6 +44,7 @@ namespace DiceRoller
             containerRegistry.RegisterForNavigation<InfoPage>();
             containerRegistry.RegisterForNavigation<SettingsPage>();
             containerRegistry.RegisterForNavigation<AboutPage>();
+            containerRegistry.RegisterForNavigation<MasterDetailsPage>();
 
             containerRegistry.RegisterSingleton<IContext, DiceContext>();
         }
@@ -58,7 +57,7 @@ namespace DiceRoller
             ctx.CreateTable<Config>();
         }
 
-        private IDictionary<Type, Func<Entity[]>> _seedDict = new Dictionary<Type, Func<Entity[]>>();
+        private readonly IDictionary<Type, Func<Entity[]>> _seedDict = new Dictionary<Type, Func<Entity[]>>();
 
 
         private void EnsureDbSeeded(IContext ctx)
