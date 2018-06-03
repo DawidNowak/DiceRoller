@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Classic\d6\1.jpg" />
+    <None Remove="Images\Classic\d6\2.jpg" />
+    <None Remove="Images\Classic\d6\3.jpg" />
+    <None Remove="Images\Classic\d6\4.jpg" />
+    <None Remove="Images\Classic\d6\5.jpg" />
+    <None Remove="Images\Classic\d6\6.jpg" />
+    <None Remove="Images\Classic\d6\mini.jpg" />
+    <None Remove="Images\Classic\logo.jpg" />
     <None Remove="Images\Descent\black\four_shields.jpg" />
     <None Remove="Images\Descent\black\mini.jpg" />
     <None Remove="Images\Descent\black\no_shield.jpg" />
@@ -40,16 +48,24 @@
     <None Remove="Images\Descent\yellow\two_hearts.jpg" />
     <None Remove="Images\Descent\yellow\two_hearts_surge.jpg" />
     <None Remove="Images\MiceMystics\logo.jpg" />
+    <None Remove="Images\MiceMystics\mini.jpg" />
     <None Remove="Images\MiceMystics\mm_bow.jpg" />
     <None Remove="Images\MiceMystics\mm_bow_surge.jpg" />
     <None Remove="Images\MiceMystics\mm_cheese.jpg" />
-    <None Remove="Images\MiceMystics\mm_mini.jpg" />
     <None Remove="Images\MiceMystics\mm_shield_sword.jpg" />
     <None Remove="Images\MiceMystics\mm_shield_sword_surge.jpg" />
     <None Remove="Images\MiceMystics\mm_sword_surge.jpg" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Images\Classic\d6\1.jpg" />
+    <EmbeddedResource Include="Images\Classic\d6\2.jpg" />
+    <EmbeddedResource Include="Images\Classic\d6\3.jpg" />
+    <EmbeddedResource Include="Images\Classic\d6\4.jpg" />
+    <EmbeddedResource Include="Images\Classic\d6\5.jpg" />
+    <EmbeddedResource Include="Images\Classic\d6\6.jpg" />
+    <EmbeddedResource Include="Images\Classic\d6\mini.jpg" />
+    <EmbeddedResource Include="Images\Classic\logo.jpg" />
     <EmbeddedResource Include="Images\Descent\black\four_shields.jpg" />
     <EmbeddedResource Include="Images\Descent\black\mini.jpg" />
     <EmbeddedResource Include="Images\Descent\black\no_shield.jpg" />
@@ -88,7 +104,7 @@
     <EmbeddedResource Include="Images\MiceMystics\mm_bow.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_bow_surge.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_cheese.jpg" />
-    <EmbeddedResource Include="Images\MiceMystics\mm_mini.jpg" />
+    <EmbeddedResource Include="Images\MiceMystics\mini.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_shield_sword.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_shield_sword_surge.jpg" />
     <EmbeddedResource Include="Images\MiceMystics\mm_sword_surge.jpg" />

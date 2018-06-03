@@ -9,10 +9,14 @@ namespace DiceRoller.DataAccess.Context
     {
         public static Game[] GetGames()
         {
+            var root = "DiceRoller.Images.";
+            var logo = "logo.jpg";
+
             var games = new[]
             {
-                new Game {Name = "Mice and Mystics", Path = "DiceRoller.Images.MiceMystics.", LogoImageSource = "logo.jpg"},
-                new Game {Name = "Descent: Journeys in the Dark (2nd edition)", Path = "DiceRoller.Images.Descent.", LogoImageSource = "logo.jpg"}
+                new Game {Name = "Mice and Mystics", Path = $"{root}MiceMystics.", LogoImageSource = logo},
+                new Game {Name = "Descent: Journeys in the Dark (2nd edition)", Path = $"{root}Descent.", LogoImageSource = logo},
+                new Game {Name = "Classic dice", Path = $"{root}Classic.", LogoImageSource = logo}
             };
 
             GiveIds(games);
@@ -22,49 +26,56 @@ namespace DiceRoller.DataAccess.Context
 
         public static Dice[] GetDice()
         {
+            var mini = "mini.jpg";
             var dice = new[]
             {
                 new Dice
                 {
                     GameId = 1,
                     Path = "",
-                    MiniImageSource = "mm_mini.jpg"
+                    MiniImageSource = mini
                 },
                 new Dice
                 {
                     GameId = 2,
                     Path = "yellow.",
-                    MiniImageSource = "mini.jpg"
+                    MiniImageSource = mini
                 },
                 new Dice
                 {
                     GameId = 2,
                     Path = "red.",
-                    MiniImageSource = "mini.jpg"
+                    MiniImageSource = mini
                 },
                 new Dice
                 {
                     GameId = 2,
                     Path = "blue.",
-                    MiniImageSource = "mini.jpg"
+                    MiniImageSource = mini
                 },
                 new Dice
                 {
                     GameId = 2,
                     Path = "brown.",
-                    MiniImageSource = "mini.jpg"
+                    MiniImageSource = mini
                 },
                 new Dice
                 {
                     GameId = 2,
                     Path = "gray.",
-                    MiniImageSource = "mini.jpg"
+                    MiniImageSource = mini
                 },
                 new Dice
                 {
                     GameId = 2,
                     Path = "black.",
-                    MiniImageSource = "mini.jpg"
+                    MiniImageSource = mini
+                },
+                new Dice
+                {
+                    GameId = 3,
+                    Path = "d6.",
+                    MiniImageSource = mini
                 }
             };
 
@@ -124,7 +135,14 @@ namespace DiceRoller.DataAccess.Context
                 new DiceWall {DiceId = 7, ImageSource = "two_shields.jpg"},
                 new DiceWall {DiceId = 7, ImageSource = "two_shields.jpg"},
                 new DiceWall {DiceId = 7, ImageSource = "three_shields.jpg"},
-                new DiceWall {DiceId = 7, ImageSource = "four_shields.jpg"}
+                new DiceWall {DiceId = 7, ImageSource = "four_shields.jpg"},
+
+                new DiceWall {DiceId = 8, ImageSource = "1.jpg"},
+                new DiceWall {DiceId = 8, ImageSource = "2.jpg"},
+                new DiceWall {DiceId = 8, ImageSource = "3.jpg"},
+                new DiceWall {DiceId = 8, ImageSource = "4.jpg"},
+                new DiceWall {DiceId = 8, ImageSource = "5.jpg"},
+                new DiceWall {DiceId = 8, ImageSource = "6.jpg"}
             };
 
             GiveIds(walls);
