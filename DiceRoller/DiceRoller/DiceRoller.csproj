@@ -12,6 +12,7 @@
     <None Remove="Images\Classic\d6\5.jpg" />
     <None Remove="Images\Classic\d6\6.jpg" />
     <None Remove="Images\Classic\d6\mini.jpg" />
+    <None Remove="Images\Classic\d8\mini.jpg" />
     <None Remove="Images\Classic\logo.jpg" />
     <None Remove="Images\Descent\black\four_shields.jpg" />
     <None Remove="Images\Descent\black\mini.jpg" />
@@ -65,6 +66,7 @@
     <EmbeddedResource Include="Images\Classic\d6\5.jpg" />
     <EmbeddedResource Include="Images\Classic\d6\6.jpg" />
     <EmbeddedResource Include="Images\Classic\d6\mini.jpg" />
+    <EmbeddedResource Include="Images\Classic\d8\mini.jpg" />
     <EmbeddedResource Include="Images\Classic\logo.jpg" />
     <EmbeddedResource Include="Images\Descent\black\four_shields.jpg" />
     <EmbeddedResource Include="Images\Descent\black\mini.jpg" />
