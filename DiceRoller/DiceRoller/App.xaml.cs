@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
 using Prism;
@@ -14,11 +17,8 @@ namespace DiceRoller
 {
     public partial class App : PrismApplication
     {
-        /* 
-         * The Xamarin Forms XAML Previewer in Visual Studio uses System.Activator.CreateInstance.
-         * This imposes a limitation in which the App class must have a default constructor. 
-         * App(IPlatformInitializer initializer = null) cannot be handled by the Activator.
-         */
+        public static MasterDetailPage MasterDetail { get; set; }
+        public static IContainerProvider GlobalContainer;
         public App() : this(null) { }
 
         public App(IPlatformInitializer initializer) : base(initializer) { }
@@ -26,12 +26,13 @@ namespace DiceRoller
         protected override async void OnInitialized()
         {
             InitializeComponent();
+            GlobalContainer = Container;
 
             var ctx = Container.Resolve<IContext>();
             EnsureDbCreated(ctx);
             EnsureDbSeeded(ctx);
 
-             await NavigationService.NavigateAsync("NavigationPage/MainPage");
+             await NavigationService.NavigateAsync("MasterDetailsPage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -40,6 +41,7 @@ namespace DiceRoller
             containerRegistry.RegisterForNavigation<MainPage>();
             containerRegistry.RegisterForNavigation<GamePage>();
             containerRegistry.RegisterForNavigation<SettingsPage>();
+            containerRegistry.RegisterForNavigation<MasterDetailsPage>();
 
             containerRegistry.RegisterSingleton<IContext, DiceContext>();
         }
@@ -52,25 +54,35 @@ namespace DiceRoller
             ctx.CreateTable<Config>();
         }
 
+        private readonly IDictionary<Type, Func<Entity[]>> _seedDict = new Dictionary<Type, Func<Entity[]>>();
+
+
         private void EnsureDbSeeded(IContext ctx)
         {
-            //I know it's awful but insert with children does not works(?)
-            //syntax error in sql
+            _seedDict[typeof(Game)] = Seed.GetGames;
+            _seedDict[typeof(Dice)] = Seed.GetDice;
+            _seedDict[typeof(DiceWall)] = Seed.GetWalls;
+            _seedDict[typeof(Config)] = Seed.GetConfigs;
 
-            var games = Seed.GetGames();
-            var dice = Seed.GetDice();
-            var walls = Seed.GetWalls();
-            var configs = Seed.GetConfigs();
-
-            games.ForEach(ctx.InsertOrReplace);
-            dice.ForEach(ctx.InsertOrReplace);
-            walls.ForEach(ctx.InsertOrReplace);
-
-            var allConfigs = ctx.GetAll<Config>();
-            configs.ForEach(cfg =>
+            var info = GetType().GetMethod("InsertNotExisting", BindingFlags.Instance | BindingFlags.NonPublic);
+            
+            _seedDict.ForEach(pair =>
             {
-                if (allConfigs.All(x => x.Key != cfg.Key))
-                    ctx.InsertOrReplace(cfg);
+                var generic = info?.MakeGenericMethod(pair.Key);
+                generic?.Invoke(this, new object[] {ctx});
+            });
+
+        }
+
+        //used by reflection
+        private void InsertNotExisting<T>(IContext ctx) where T : Entity, new()
+        {
+            var all = ctx.GetAll<T>();
+            var arr = _seedDict[typeof(T)].Invoke();
+            arr.ForEach(o =>
+            {
+                if (all.All(x => x.Id != o.Id))
+                    ctx.InsertOrReplace(o);
             });
         }
     }

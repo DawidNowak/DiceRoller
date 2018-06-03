@@ -11,7 +11,7 @@ using Xamarin.Forms.Internals;
 namespace DiceRoller.Views
 {
     //[XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class GamePage : ContentPage, IView
+    public partial class GamePage : ContentPage, IGameView
     {
         public GamePage()
         {
@@ -31,7 +31,7 @@ namespace DiceRoller.Views
             var rand = new Random();
             var diceImg = new SwipeableImage
             {
-                Source = ImageSource.FromResource(mini.Path + mini.Walls.ElementAt(rand.Next(0, mini.Walls.Count)).ImageSource),
+                Source = ImageSource.FromResource(((GamePageViewModel)BindingContext).Game.Path + mini.Path + mini.Walls.ElementAt(rand.Next(0, mini.Walls.Count)).ImageSource),
                 BindingContext = mini,
                 HeightRequest = 64d,
                 WidthRequest = 64d
@@ -56,6 +56,12 @@ namespace DiceRoller.Views
         {
             MinisLayout.Children.Clear();
             minis.ForEach(m => MinisLayout.Children.Add(m));
+        }
+
+        protected override void OnDisappearing()
+        {
+            ((GamePageViewModel)BindingContext).OnDisappearing();
+            base.OnDisappearing();
         }
     }
 }

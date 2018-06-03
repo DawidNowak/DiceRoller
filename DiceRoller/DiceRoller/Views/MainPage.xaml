@@ -1,21 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:DiceRoller.Controls"
+             xmlns:converters="clr-namespace:DiceRoller.Converters"
              x:Class="DiceRoller.Views.MainPage"
              x:Name="MainContentPage"
              Title="{Binding Title}">
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="ic_settings.png" Command="{Binding Path=SettingsNavigationCommand}"/>
-    </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:GameToImageSourceConverter x:Key="GameToImageSourceConverter"></converters:GameToImageSourceConverter>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <ListView x:Name="GamesView" ItemsSource="{Binding Path=Games}">
+    <StackLayout HorizontalOptions="CenterAndExpand">
+        <Entry Placeholder="filter games..." Text="{Binding FilterText}"/>
+        <ListView x:Name="GamesListView" ItemsSource="{Binding Path=Games, Mode=TwoWay}" VerticalOptions="CenterAndExpand" RowHeight="100">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Path=Name}" 
-                              Command="{Binding Source={x:Reference MainContentPage}, Path=BindingContext.GameNavigationCommand}"
-                              CommandParameter="{Binding .}"></TextCell>
+                    <controls:GameViewCell Command="{Binding Source={x:Reference MainContentPage}, Path=BindingContext.GameNavigationCommand}"
+                                                CommandParameter="{Binding .}">
+                        <Image Source="{Binding ., Converter={StaticResource GameToImageSourceConverter}}"/>
+                    </controls:GameViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

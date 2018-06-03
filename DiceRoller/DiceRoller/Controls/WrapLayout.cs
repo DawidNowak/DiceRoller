@@ -6,7 +6,7 @@ namespace DiceRoller.Controls
 {
     public class WrapLayout : Layout<View>
     {
-        Dictionary<Size, LayoutData> _layoutDataCache = new Dictionary<Size, LayoutData>();
+        private readonly Dictionary<Size, LayoutData> _layoutDataCache = new Dictionary<Size, LayoutData>();
 
         public static readonly BindableProperty ColumnSpacingProperty = BindableProperty.Create(
             "ColumnSpacing",
