@@ -17,5 +17,6 @@ namespace DiceRoller.DataAccess.Models
         public int GameId { get; set; }
         [ManyToOne]
         public virtual Game Game { get; set; }
+        public bool IsGenerated { get; set; }
     }
 }
