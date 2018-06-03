@@ -25,7 +25,7 @@ namespace DiceRoller.ViewModels
             _ctx = ctx;
             Title = "Main Page";
 
-            GameNavigationCommand = new DelegateCommand<Game>(navigate);
+            GameNavigationCommand = new DelegateCommand<Game>(Navigate);
 
             _games = new List<Game>();
             ctx.GetAll<Game>().OrderBy(g => g.Name).ForEach(g =>
@@ -36,7 +36,6 @@ namespace DiceRoller.ViewModels
         }
 
         private string _filterText = string.Empty;
-
         public string FilterText
         {
             get => _filterText;
@@ -55,7 +54,7 @@ namespace DiceRoller.ViewModels
             base.OnNavigatedFrom(parameters);
         }
 
-        private void navigate(Game game)
+        private void Navigate(Game game)
         {
             var vm = new GamePageViewModel(_ctx, NavigationService) {Game = game};
             var page = new GamePage { BindingContext = vm };

@@ -35,6 +35,8 @@ namespace DiceRoller.ViewModels
             _minis = new List<View>();
         }
 
+        private bool CanRoll() => _canRoll;
+
         private Game _game;
         public Game Game
         {
@@ -112,15 +114,14 @@ namespace DiceRoller.ViewModels
             else await FlipDice(dice, rand);
         }
 
-        private static async Task FlipDice(IList<View> dice, Random rand, int delay = 0)
+        private static async Task FlipDice(IEnumerable<View> dice, Random rand, int delay = 0)
         {
             dice.ForEach(async d =>
             {
                 var diceCtx = (Dice)d.BindingContext;
                 await d.FadeTo(0, 50);
-                ((SwipeableImage)d).Source = ImageSource.FromResource(diceCtx.Game.Path + diceCtx.Path +
-                                                                      diceCtx.Walls.ElementAt(rand.Next(0, diceCtx.Walls.Count))
-                                                                          .ImageSource);
+                var imgSource = diceCtx.Walls.ElementAt(rand.Next(0, diceCtx.Walls.Count)).ImageSource;
+                ((SwipeableImage) d).Source = ImageSource.FromResource($"{diceCtx.Game.Path}{diceCtx.Path}{imgSource}");
                 await d.FadeTo(1, 50);
             });
             await Task.Delay(delay);
@@ -131,8 +132,6 @@ namespace DiceRoller.ViewModels
             _canRoll = canRoll;
             RollCommand.RaiseCanExecuteChanged();
         }
-
-        private bool CanRoll() => _canRoll;
 
         public void AddDice(Dice toAdd)
         {
@@ -153,12 +152,11 @@ namespace DiceRoller.ViewModels
 
         public void OnDisappearing()
         {
-            if (_ctx.GetAll<Config>().First(x => x.Key == Consts.SaveDiceStateKey).Value.ToBoolean())
-            {
-                var setIds = string.Join(Consts.IdsSeparator.ToString(), View?.Dice.Select(d => ((Dice)d.BindingContext).Id.ToString()));
-                Game.DiceSet = setIds;
-                _ctx.InsertOrReplace(Game);
-            }
+            if (!_saveState) return;
+
+            var setIds = string.Join(Consts.IdsSeparator.ToString(), View.Dice.Select(d => ((Dice)d.BindingContext).Id.ToString()));
+            Game.DiceSet = setIds;
+            _ctx.InsertOrReplace(Game);
         }
     }
 }

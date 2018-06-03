@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using DiceRoller.Controls;
 using DiceRoller.DataAccess.Models;
 using Xamarin.Forms;
 

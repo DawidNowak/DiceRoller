@@ -10,7 +10,7 @@ namespace DiceRoller.Views
 	{
 		public MasterDetailsPage ()
 		{
-			InitializeComponent ();
+			InitializeComponent();
             Master = new SettingsPage();
             Detail = new NavigationPage(new MainPage());
 		    App.MasterDetail = this;

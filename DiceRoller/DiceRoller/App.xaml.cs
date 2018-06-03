@@ -10,7 +10,6 @@ using DiceRoller.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Prism.Autofac;
-using Prism.Navigation;
 using Xamarin.Forms.Internals;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -41,9 +40,7 @@ namespace DiceRoller
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage>();
             containerRegistry.RegisterForNavigation<GamePage>();
-            containerRegistry.RegisterForNavigation<InfoPage>();
             containerRegistry.RegisterForNavigation<SettingsPage>();
-            containerRegistry.RegisterForNavigation<AboutPage>();
             containerRegistry.RegisterForNavigation<MasterDetailsPage>();
 
             containerRegistry.RegisterSingleton<IContext, DiceContext>();
@@ -62,10 +59,10 @@ namespace DiceRoller
 
         private void EnsureDbSeeded(IContext ctx)
         {
-            _seedDict[typeof(Game)] = () => Seed.GetGames();
-            _seedDict[typeof(Dice)] = () => Seed.GetDice();
-            _seedDict[typeof(DiceWall)] = () => Seed.GetWalls();
-            _seedDict[typeof(Config)] = () => Seed.GetConfigs();
+            _seedDict[typeof(Game)] = Seed.GetGames;
+            _seedDict[typeof(Dice)] = Seed.GetDice;
+            _seedDict[typeof(DiceWall)] = Seed.GetWalls;
+            _seedDict[typeof(Config)] = Seed.GetConfigs;
 
             var info = GetType().GetMethod("InsertNotExisting", BindingFlags.Instance | BindingFlags.NonPublic);
             
@@ -77,6 +74,7 @@ namespace DiceRoller
 
         }
 
+        //used by reflection
         private void InsertNotExisting<T>(IContext ctx) where T : Entity, new()
         {
             var all = ctx.GetAll<T>();
