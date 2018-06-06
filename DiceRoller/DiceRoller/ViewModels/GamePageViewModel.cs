@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DiceRoller.Controls;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Helpers;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Extensions;
+using DiceRoller.Helpers;
 using DiceRoller.Interfaces;
 using Prism.Commands;
 using Prism.Navigation;
@@ -109,6 +111,7 @@ namespace DiceRoller.ViewModels
                 for (var delay = 160; delay < 520; delay += 40)
                 {
                     await FlipDice(dice, rand, delay);
+                    Thread.Sleep(5);
                 }
             }
             else await FlipDice(dice, rand);
@@ -120,8 +123,19 @@ namespace DiceRoller.ViewModels
             {
                 var diceCtx = (Dice)d.BindingContext;
                 await d.FadeTo(0, 50);
-                var imgSource = diceCtx.Walls.ElementAt(rand.Next(0, diceCtx.Walls.Count)).ImageSource;
-                ((SwipeableImage) d).Source = ImageSource.FromResource($"{diceCtx.Game.Path}{diceCtx.Path}{imgSource}");
+
+                if (!diceCtx.IsGenerated)
+                {
+                    var imgSource = diceCtx.Walls.ElementAt(rand.Next(0, diceCtx.Walls.Count)).ImageSource;
+                    ((SwipeableImage)d).Source = ImageSource.FromResource($"{diceCtx.Game.Path}{diceCtx.Path}{imgSource}");
+                }
+                else
+                {
+                    var wallsCount = Convert.ToInt16(diceCtx.Path.Substring(1, diceCtx.Path.Length - 2));
+                    var skData = DrawHelper.DrawDice(rand.Next(1, wallsCount+1), wallsCount);
+                    ((SwipeableImage) d).Source = ImageSource.FromStream(() => skData.AsStream());
+                }
+
                 await d.FadeTo(1, 50);
             });
             await Task.Delay(delay);

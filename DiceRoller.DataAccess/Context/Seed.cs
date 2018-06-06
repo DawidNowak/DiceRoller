@@ -83,6 +83,13 @@ namespace DiceRoller.DataAccess.Context
                     Path = "d8.",
                     MiniImageSource = mini,
                     IsGenerated = true
+                },
+                new Dice
+                {
+                    GameId = 3,
+                    Path = "d12.",
+                    MiniImageSource = mini,
+                    IsGenerated = true
                 }
             };
 

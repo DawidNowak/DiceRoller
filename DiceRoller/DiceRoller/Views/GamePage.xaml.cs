@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DiceRoller.Controls;
 using DiceRoller.DataAccess.Models;
+using DiceRoller.Helpers;
 using DiceRoller.Interfaces;
 using DiceRoller.ViewModels;
 using Xamarin.Forms;
@@ -29,13 +31,32 @@ namespace DiceRoller.Views
         public void AddDice(Dice mini)
         {
             var rand = new Random();
-            var diceImg = new SwipeableImage
+            SwipeableImage diceImg;
+
+            if (!mini.IsGenerated)
             {
-                Source = ImageSource.FromResource(((GamePageViewModel)BindingContext).Game.Path + mini.Path + mini.Walls.ElementAt(rand.Next(0, mini.Walls.Count)).ImageSource),
-                BindingContext = mini,
-                HeightRequest = 64d,
-                WidthRequest = 64d
-            };
+                diceImg = new SwipeableImage
+                {
+                    Source = ImageSource.FromResource(((GamePageViewModel)BindingContext).Game.Path + mini.Path + mini.Walls.ElementAt(rand.Next(0, mini.Walls.Count)).ImageSource),
+                    BindingContext = mini,
+                    HeightRequest = 64d,
+                    WidthRequest = 64d
+                };
+                Thread.Sleep(10);
+            }
+            else
+            {
+                var wallsCount = Convert.ToInt16(mini.Path.Substring(1, mini.Path.Length - 2));
+                var skData = DrawHelper.DrawDice(rand.Next(1, wallsCount+1), wallsCount);
+
+                diceImg = new SwipeableImage
+                {
+                    Source = ImageSource.FromStream(() => skData.AsStream()),
+                    BindingContext = mini,
+                    HeightRequest = 64d,
+                    WidthRequest = 64d
+                };
+            }
 
             diceImg.SwipedLeft += (sender, args) => RemoveDice(DiceLayout.Children.IndexOf(sender));
             diceImg.SwipedRight += (sender, args) => RemoveDice(DiceLayout.Children.IndexOf(sender));
@@ -48,7 +69,7 @@ namespace DiceRoller.Views
             if (index >= 0)
             {
                 DiceLayout.Children.RemoveAt(index);
-                ((GamePageViewModel) BindingContext).DiceNumber--;
+                ((GamePageViewModel)BindingContext).DiceNumber--;
             }
         }
 
