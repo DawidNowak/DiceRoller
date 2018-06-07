@@ -4,12 +4,6 @@ namespace DiceRoller.Helpers
 {
     public static class DrawHelper
     {
-        private static readonly SKPaint WhiteFillColor = new SKPaint
-        {
-            Style = SKPaintStyle.Fill,
-            Color = SKColors.White
-        };
-
         private static readonly SKPaint LightGrayStrokeColor = new SKPaint
         {
             Style = SKPaintStyle.Stroke,
@@ -42,7 +36,6 @@ namespace DiceRoller.Helpers
             var canv = Surface.Canvas;
             canv.Clear(SKColors.White);
 
-            canv.DrawRect(new SKRect(0f, 0f, 100f, 100f), WhiteFillColor);
             canv.DrawRect(0f,0f,100f,100f, LightGrayStrokeColor);
 
             var textWidth = BlackTextColor.MeasureText(drawnResult.ToString());
