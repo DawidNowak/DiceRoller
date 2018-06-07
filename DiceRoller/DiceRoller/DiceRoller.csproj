@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Classic\d100\mini.jpg" />
     <None Remove="Images\Classic\d12\mini.jpg" />
+    <None Remove="Images\Classic\d20\mini.jpg" />
     <None Remove="Images\Classic\d6\1.jpg" />
     <None Remove="Images\Classic\d6\2.jpg" />
     <None Remove="Images\Classic\d6\3.jpg" />
@@ -60,7 +62,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Images\Classic\d100\mini.jpg" />
     <EmbeddedResource Include="Images\Classic\d12\mini.jpg" />
+    <EmbeddedResource Include="Images\Classic\d20\mini.jpg" />
     <EmbeddedResource Include="Images\Classic\d6\1.jpg" />
     <EmbeddedResource Include="Images\Classic\d6\2.jpg" />
     <EmbeddedResource Include="Images\Classic\d6\3.jpg" />
