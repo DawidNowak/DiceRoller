@@ -12,5 +12,7 @@ namespace DiceRoller.DataAccess.Models
         public int DiceId { get; set; }
         [ManyToOne]
         public virtual Dice Dice { get; set; }
+
+        public byte[] Image { get; set; }
     }
 }

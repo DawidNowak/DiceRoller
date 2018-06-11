@@ -37,7 +37,7 @@ namespace DiceRoller.Views
             {
                 diceImg = new SwipeableImage
                 {
-                    Source = ImageSource.FromResource(((GamePageViewModel)BindingContext).Game.Path + mini.Path + mini.Walls.ElementAt(rand.Next(0, mini.Walls.Count)).ImageSource),
+                    Source = BlobHelper.GetImgSource(mini.Walls.ElementAt(rand.Next(0, mini.Walls.Count)).Image),
                     BindingContext = mini,
                     HeightRequest = 64d,
                     WidthRequest = 64d
@@ -66,11 +66,10 @@ namespace DiceRoller.Views
 
         public void RemoveDice(int index)
         {
-            if (index >= 0)
-            {
-                DiceLayout.Children.RemoveAt(index);
-                ((GamePageViewModel)BindingContext).DiceNumber--;
-            }
+            if (index < 0) return;
+
+            DiceLayout.Children.RemoveAt(index);
+            ((GamePageViewModel)BindingContext).DiceNumber--;
         }
 
         public void RefreshMinis(ICollection<View> minis)

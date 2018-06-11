@@ -55,15 +55,12 @@ namespace DiceRoller.ViewModels
 
         private void PopulateDiceMinis()
         {
-            var minis = Game.Dice.Select(d => d.MiniImageSource).ToArray();
-
-            for (var i = 0; i < minis.Length; i++)
+            Game.Dice.ForEach(d =>
             {
-                var fullPath = $"{Game.Path}{Game.Dice.ElementAt(i).Path}{minis[i]}";
                 var img = new Image
                 {
-                    Source = ImageSource.FromResource(fullPath),
-                    BindingContext = Game.Dice.ElementAt(i),
+                    Source = BlobHelper.GetImgSource(d.MiniImage),
+                    BindingContext = d,
                     HeightRequest = 36d,
                     WidthRequest = 36d
                 };
@@ -76,7 +73,7 @@ namespace DiceRoller.ViewModels
 #pragma warning restore CS0618 // Type or member is obsolete
 
                 _minis.Add(img);
-            }
+            });
 
             View?.RefreshMinis(_minis);
         }
@@ -126,8 +123,7 @@ namespace DiceRoller.ViewModels
 
                 if (!diceCtx.IsGenerated)
                 {
-                    var imgSource = diceCtx.Walls.ElementAt(rand.Next(0, diceCtx.Walls.Count)).ImageSource;
-                    ((SwipeableImage)d).Source = ImageSource.FromResource($"{diceCtx.Game.Path}{diceCtx.Path}{imgSource}");
+                    ((SwipeableImage)d).Source = BlobHelper.GetImgSource(diceCtx.Walls.ElementAt(rand.Next(0, diceCtx.Walls.Count)).Image);
                 }
                 else
                 {

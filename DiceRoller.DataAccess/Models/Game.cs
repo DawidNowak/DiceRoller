@@ -21,5 +21,7 @@ namespace DiceRoller.DataAccess.Models
 
         [MaxLength(70)]
         public string DiceSet { get; set; }
+
+        public byte[] LogoImage { get; set; }
     }
 }

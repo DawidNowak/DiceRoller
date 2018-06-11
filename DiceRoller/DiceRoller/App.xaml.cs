@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
+using DiceRoller.Helpers;
 using Prism;
 using Prism.Ioc;
 using DiceRoller.Views;
@@ -71,7 +72,6 @@ namespace DiceRoller
                 var generic = info?.MakeGenericMethod(pair.Key);
                 generic?.Invoke(this, new object[] {ctx});
             });
-
         }
 
         //used by reflection

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using DiceRoller.DataAccess.Models;
+using DiceRoller.Helpers;
 using Xamarin.Forms;
 
 namespace DiceRoller.Converters
@@ -9,10 +10,10 @@ namespace DiceRoller.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) return string.Empty;
+            if (value == null) return null;
 
             var game = (Game)value;
-            return ImageSource.FromResource($"{game.Path}{game.LogoImageSource}");
+            return BlobHelper.GetImgSource(game.LogoImage);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

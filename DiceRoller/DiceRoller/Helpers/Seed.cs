@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DiceRoller.DataAccess.Helpers;
 using DiceRoller.DataAccess.Models;
 using Xamarin.Forms.Internals;
 
-namespace DiceRoller.DataAccess.Context
+namespace DiceRoller.Helpers
 {
     public static class Seed
     {
+        private static Game[] _games;
+        private static Dice[] _dice;
+
         public static Game[] GetGames()
         {
             var root = "DiceRoller.Images.";
@@ -19,8 +23,9 @@ namespace DiceRoller.DataAccess.Context
                 new Game {Name = "Classic dice", Path = $"{root}Classic.", LogoImageSource = logo}
             };
 
+            games.ForEach(g => g.LogoImage = BlobHelper.GetBytes($"{g.Path}{g.LogoImageSource}"));
             GiveIds(games);
-
+            _games = games;
             return games;
         }
 
@@ -108,6 +113,8 @@ namespace DiceRoller.DataAccess.Context
             };
 
             GiveIds(dice);
+            dice.ForEach(d => d.MiniImage = BlobHelper.GetBytes($"{_games.First(g => g.Id == d.GameId).Path}{d.Path}{d.MiniImageSource}"));
+            _dice = dice;
 
             return dice;
         }
@@ -174,6 +181,12 @@ namespace DiceRoller.DataAccess.Context
             };
 
             GiveIds(walls);
+            walls.ForEach(w =>
+            {
+                var dice = _dice.First(d => d.Id == w.DiceId);
+                w.Image = BlobHelper.GetBytes(
+                    $"{_games.First(g => g.Id == dice.GameId).Path}{dice.Path}{w.ImageSource}");
+            });
 
             return walls;
         }
