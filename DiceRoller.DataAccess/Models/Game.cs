@@ -23,5 +23,6 @@ namespace DiceRoller.DataAccess.Models
         public string DiceSet { get; set; }
 
         public byte[] LogoImage { get; set; }
+        public bool IsEditable { get; set; }
     }
 }

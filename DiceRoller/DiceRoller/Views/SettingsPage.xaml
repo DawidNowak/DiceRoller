@@ -16,6 +16,7 @@
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
 
@@ -24,6 +25,8 @@
 
                 <Label Grid.Row="1" Text="Save dice sets states"/>
                 <Switch Grid.Column="1" Grid.Row="1" IsToggled="{Binding SaveDiceState}"/>
+
+                <Button Grid.Row="2" Text="New Game..." Command="{Binding NewGameCommand}"></Button>
             </Grid>
         </StackLayout>
     </ContentPage.Content>
