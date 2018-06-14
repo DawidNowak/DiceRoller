@@ -46,6 +46,7 @@ namespace DiceRoller
             containerRegistry.RegisterForNavigation<GameCreatorPage>();
 
             containerRegistry.RegisterSingleton<IContext, DiceContext>();
+            containerRegistry.RegisterSingleton<IEventAgregator, EventAggregator>();
         }
 
         private void EnsureDbCreated(IContext ctx)

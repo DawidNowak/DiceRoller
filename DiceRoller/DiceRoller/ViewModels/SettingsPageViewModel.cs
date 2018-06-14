@@ -3,6 +3,7 @@ using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Helpers;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Extensions;
+using DiceRoller.Helpers;
 using DiceRoller.Views;
 using Prism.Commands;
 using Prism.Navigation;
@@ -13,11 +14,13 @@ namespace DiceRoller.ViewModels
     public class SettingsPageViewModel : ViewModelBase
     {
         private readonly IContext _ctx;
+        private readonly IEventAgregator _eventAggregator;
         private readonly IDictionary<string, Config> _configs;
 
-        public SettingsPageViewModel(INavigationService navigationService, IContext ctx) : base(navigationService)
+        public SettingsPageViewModel(INavigationService navigationService, IContext ctx, IEventAgregator eventAggregator) : base(navigationService)
         {
             _ctx = ctx;
+            _eventAggregator = eventAggregator;
             _configs = new Dictionary<string, Config>();
             _ctx.GetAll<Config>().ForEach(cfg => { _configs[cfg.Key] = cfg; });
             NewGameCommand = new DelegateCommand(CreateNewGame);
@@ -54,7 +57,7 @@ namespace DiceRoller.ViewModels
 
         private void CreateNewGame()
         {
-            var vm = new GameCreatorPageViewModel(_ctx, NavigationService);
+            var vm = new GameCreatorPageViewModel(_ctx, NavigationService, _eventAggregator);
             var page = new GameCreatorPage { BindingContext = vm };
 
             App.MasterDetail.Detail.Navigation.PushAsync(page);

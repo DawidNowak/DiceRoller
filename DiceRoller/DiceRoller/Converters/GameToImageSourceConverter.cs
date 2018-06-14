@@ -13,7 +13,10 @@ namespace DiceRoller.Converters
             if (value == null) return null;
 
             var game = (Game)value;
-            return BlobHelper.GetImgSource(game.LogoImage);
+            return game.LogoImage != null
+                ? BlobHelper.GetImgSource(game.LogoImage)
+                //TODO: CHECK WHY TEXT IS NOT APPEARING AND 300X100 RECT IS SQUAGE >.<
+                : ImageSource.FromStream(() => DrawHelper.DrawText(game.Name, 300f, 100f).AsStream());
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

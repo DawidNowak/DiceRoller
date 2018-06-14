@@ -1,9 +1,16 @@
-﻿using SkiaSharp;
+﻿using DiceRoller.DataAccess.Models;
+using SkiaSharp;
 
 namespace DiceRoller.Helpers
 {
     public static class DrawHelper
     {
+        private static readonly SKPaint WhiteColor = new SKPaint
+        {
+            Style = SKPaintStyle.Fill,
+            Color = SKColors.White
+        };
+
         private static readonly SKPaint LightGrayStrokeColor = new SKPaint
         {
             Style = SKPaintStyle.Stroke,
@@ -42,6 +49,18 @@ namespace DiceRoller.Helpers
             canv.DrawText(drawnResult.ToString(), 50f - textWidth/2, 65f, BlackTextColor);
 
             canv.DrawText(diceType.ToString(), 90f, 25f, GrayTextColor);
+
+            return Surface.Snapshot().Encode(SKEncodedImageFormat.Jpeg, 100);
+        }
+
+        public static SKData DrawText(string text, float width, float height)
+        {
+            var canv = Surface.Canvas;
+            canv.Clear(SKColors.White);
+
+            canv.DrawRect(0f,0f, width, height, WhiteColor);
+            var textWidth = BlackTextColor.MeasureText(text);
+            canv.DrawText(text, width - textWidth/2, 65f, BlackTextColor);
 
             return Surface.Snapshot().Encode(SKEncodedImageFormat.Jpeg, 100);
         }

@@ -3,8 +3,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
+using DiceRoller.Helpers;
 using DiceRoller.Views;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Navigation;
 using Xamarin.Forms.Internals;
 
@@ -13,26 +15,23 @@ namespace DiceRoller.ViewModels
     public class MainPageViewModel : ViewModelBase
     {
         private readonly IContext _ctx;
-        private readonly IList<Game> _games;
+        private readonly IEventAgregator _eventAggregator;
+        private IList<Game> _games = new List<Game>();
 
         public ObservableCollection<Game> Games { get; set; } = new ObservableCollection<Game>();
 
         public DelegateCommand<Game> GameNavigationCommand { get; }
 
-        public MainPageViewModel(INavigationService navigationService, IContext ctx)
+        public MainPageViewModel(INavigationService navigationService, IContext ctx, IEventAgregator eventAggregator)
             : base(navigationService)
         {
             _ctx = ctx;
+            _eventAggregator = eventAggregator;
             Title = "Main Page";
 
             GameNavigationCommand = new DelegateCommand<Game>(Navigate);
-
-            _games = new List<Game>();
-            ctx.GetAll<Game>().OrderBy(g => g.Name).ForEach(g =>
-            {
-                _games.Add(g);
-                Games.Add(g);
-            });
+            _eventAggregator.Subscribe<GameChangedEvent>(RefreshGames);
+            RefreshGames();
         }
 
         private string _filterText = string.Empty;
@@ -46,6 +45,17 @@ namespace DiceRoller.ViewModels
                 if (_filterText.Length > 0) _games.Where(g => g.Name.ToLower().Contains(_filterText)).ForEach(g => Games.Add(g));
                 else _games.ForEach(g => Games.Add(g));
             }
+        }
+
+        private void RefreshGames()
+        {
+            _games.Clear();
+            Games.Clear();
+            _ctx.GetAll<Game>().OrderBy(g => g.Name).ForEach(g =>
+            {
+                _games.Add(g);
+                Games.Add(g);
+            });
         }
 
         public override void OnNavigatedFrom(NavigationParameters parameters)

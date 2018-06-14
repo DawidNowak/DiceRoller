@@ -34,6 +34,11 @@ namespace DiceRoller.DataAccess.Context
             _conn.CreateTable<T>();
         }
 
+        public int GetNextId<T>() where T : Entity, new()
+        {
+            return _conn.Table<T>().Max(t => t.Id) + 1;
+        }
+
         public void InsertOrReplace(object o)
         {
             _conn.InsertOrReplace(o);

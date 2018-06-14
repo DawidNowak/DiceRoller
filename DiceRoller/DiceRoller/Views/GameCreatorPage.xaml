@@ -3,10 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DiceRoller.Views.GameCreatorPage">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="{Binding Title}"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+        <StackLayout Orientation="Vertical">
+            <StackLayout VerticalOptions="StartAndExpand">
+                <Label Text="Game creator"
+                       HorizontalOptions="CenterAndExpand" />
+                <Entry Text="{Binding Name}" Placeholder="game name..."></Entry>
+            </StackLayout>
+            <Button Text="Save" Command="{Binding SaveCommand}"></Button>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
