@@ -2,6 +2,7 @@
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Helpers;
+using DiceRoller.Interfaces;
 using Prism.Commands;
 using Prism.Navigation;
 
@@ -19,10 +20,16 @@ namespace DiceRoller.ViewModels
             DiceList = new ObservableCollection<Dice>();
             SaveCommand = new DelegateCommand(Save, CanSave);
             AddDiceCommand = new DelegateCommand(AddDice);
+            EditDiceCommand = new DelegateCommand<Dice>(EditDice);
+            DeleteDiceCommand = new DelegateCommand<Dice>(DeleteDice);
         }
+
+        public IGameCreatorView View { get; set; }
 
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand AddDiceCommand { get; set; }
+        public DelegateCommand<Dice> EditDiceCommand { get; set; }
+        public DelegateCommand<Dice> DeleteDiceCommand { get; set; }
 
         public string Title { get; set; } = "Game Creator";
 
@@ -74,6 +81,16 @@ namespace DiceRoller.ViewModels
         private void AddDice()
         {
             DiceList.Add(new Dice { Path = $"Dice no.{DiceList.Count + 1}. Mini image not set." });
+        }
+
+        private void EditDice(Dice dice)
+        {
+            var a = 1;
+        }
+
+        private async void DeleteDice(Dice dice)
+        {
+            if (await View.DisplayAlert(dice.Path.Replace(". Mini image not set.", ""))) DiceList.Remove(dice);
         }
     }
 }

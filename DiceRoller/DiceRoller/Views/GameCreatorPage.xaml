@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Name="GameCreator"
              x:Class="DiceRoller.Views.GameCreatorPage">
     <ContentPage.Content>
         <StackLayout Orientation="Vertical">
@@ -13,8 +14,10 @@
                         <DataTemplate>
                             <ViewCell>
                                 <ViewCell.ContextActions>
-                                    <MenuItem Text="Edit"></MenuItem>
-                                    <MenuItem Text="Delete"></MenuItem>
+                                    <MenuItem Text="Edit" Command="{Binding Source={x:Reference GameCreator}, Path=BindingContext.EditDiceCommand}"
+                                              CommandParameter="{Binding .}"></MenuItem>
+                                    <MenuItem Text="Delete" Command="{Binding Source={x:Reference GameCreator}, Path=BindingContext.DeleteDiceCommand}"
+                                              CommandParameter="{Binding .}"></MenuItem>
                                 </ViewCell.ContextActions>
                                 <StackLayout Orientation="Vertical">
                                     <Label Text="{Binding Path}" Margin="0,10" HorizontalTextAlignment="Center" IsVisible="{Binding MiniImage, 
