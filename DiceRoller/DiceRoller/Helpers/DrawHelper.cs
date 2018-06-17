@@ -52,17 +52,5 @@ namespace DiceRoller.Helpers
 
             return Surface.Snapshot().Encode(SKEncodedImageFormat.Jpeg, 100);
         }
-
-        public static SKData DrawText(string text, float width, float height)
-        {
-            var canv = Surface.Canvas;
-            canv.Clear(SKColors.White);
-
-            canv.DrawRect(0f,0f, width, height, WhiteColor);
-            var textWidth = BlackTextColor.MeasureText(text);
-            canv.DrawText(text, width - textWidth/2, 65f, BlackTextColor);
-
-            return Surface.Snapshot().Encode(SKEncodedImageFormat.Jpeg, 100);
-        }
     }
 }

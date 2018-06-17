@@ -2,16 +2,9 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:DiceRoller.Controls"
-             xmlns:converters="clr-namespace:DiceRoller.Converters"
              x:Class="DiceRoller.Views.MainPage"
              x:Name="MainContentPage"
              Title="{Binding Title}">
-
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <converters:GameToImageSourceConverter x:Key="GameToImageSourceConverter"></converters:GameToImageSourceConverter>
-        </ResourceDictionary>
-    </ContentPage.Resources>
 
     <StackLayout HorizontalOptions="StartAndExpand">
         <Entry Placeholder="filter games..." Text="{Binding FilterText}"/>
@@ -20,7 +13,7 @@
                 <DataTemplate>
                     <controls:GameViewCell Command="{Binding Source={x:Reference MainContentPage}, Path=BindingContext.GameNavigationCommand}"
                                                 CommandParameter="{Binding .}">
-                        <Image Source="{Binding ., Converter={StaticResource GameToImageSourceConverter}}"/>
+                        <Image Source="{Binding LogoImage, Converter={StaticResource ByteArrayToImageSourceConverter}}"/>
                     </controls:GameViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>

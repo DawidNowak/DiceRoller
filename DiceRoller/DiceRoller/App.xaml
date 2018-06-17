@@ -2,10 +2,15 @@
 <prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Autofac;assembly=Prism.Autofac.Forms"
+             xmlns:converters="clr-namespace:DiceRoller.Converters;assembly=DiceRoller"
              x:Class="DiceRoller.App">
 	<Application.Resources>
 
-		<!-- Application resource dictionary -->
+        <ResourceDictionary>
+            <converters:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"></converters:ByteArrayToImageSourceConverter>
+            <converters:ByteArrayToVisibilityConverter x:Key="ByteArrayToVisibilityConverter"></converters:ByteArrayToVisibilityConverter>
+            <converters:InvertByteArrayToVisibilityConverter x:Key="InvertByteArrayToVisibilityConverter"></converters:InvertByteArrayToVisibilityConverter>
+        </ResourceDictionary>
 
-	</Application.Resources>
+    </Application.Resources>
 </prism:PrismApplication>

@@ -5,9 +5,28 @@
     <ContentPage.Content>
         <StackLayout Orientation="Vertical">
             <StackLayout VerticalOptions="StartAndExpand">
-                <Label Text="Game creator"
-                       HorizontalOptions="CenterAndExpand" />
+                <Label Text="Game creator"/>
                 <Entry Text="{Binding Name}" Placeholder="game name..."></Entry>
+                <Button Text="Add Dice" Command="{Binding AddDiceCommand}"></Button>
+                <ListView ItemsSource="{Binding DiceList, Mode=TwoWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <ViewCell.ContextActions>
+                                    <MenuItem Text="Edit"></MenuItem>
+                                    <MenuItem Text="Delete"></MenuItem>
+                                </ViewCell.ContextActions>
+                                <StackLayout Orientation="Vertical">
+                                    <Label Text="{Binding Path}" Margin="0,10" HorizontalTextAlignment="Center" IsVisible="{Binding MiniImage, 
+                                        Converter={StaticResource InvertByteArrayToVisibilityConverter}}"/>
+                                    <Image Source="{Binding MiniImage, Converter={StaticResource ByteArrayToImageSourceConverter}}" 
+                                           IsVisible="{Binding MiniImage, Converter={StaticResource ByteArrayToVisibilityConverter}}">
+                                    </Image>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </StackLayout>
             <Button Text="Save" Command="{Binding SaveCommand}"></Button>
         </StackLayout>

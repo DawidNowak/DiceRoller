@@ -204,6 +204,9 @@
     <PackageReference Include="SQLiteNetExtensions-netstandard">
       <Version>2.0.0-alpha3</Version>
     </PackageReference>
+    <PackageReference Include="Xam.Plugin.Media">
+      <Version>4.0.0.9</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
     <PackageReference Include="Prism.Autofac.Forms" Version="7.0.0.396" />
   </ItemGroup>

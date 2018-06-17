@@ -12,14 +12,15 @@
                                  Margin="20" 
                                  ColumnSpacing="10" 
                                  RowSpacing="10"/>
-        <StackLayout VerticalOptions="CenterAndExpand">
-            <controls:WrapLayout x:Name="DiceLayout" 
-                                     Margin="20" 
-                                     ColumnSpacing="10" 
-                                     RowSpacing="10"/>
+        <StackLayout VerticalOptions="StartAndExpand">
+            
+            <!--TODO: implement scroll when dice has to push roll button off the screen-->
+            <controls:WrapLayout x:Name="DiceLayout"
+                                 Margin="20" 
+                                 ColumnSpacing="10" 
+                                 RowSpacing="10"/>
         </StackLayout>
-
         <Button Text="Roll"
-                    Command="{Binding Path=RollCommand}"></Button>
+                Command="{Binding Path=RollCommand}"></Button>
     </StackLayout>
 </ContentPage>
