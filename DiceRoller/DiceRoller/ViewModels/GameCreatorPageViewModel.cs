@@ -3,6 +3,7 @@ using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Helpers;
 using DiceRoller.Interfaces;
+using DiceRoller.Views;
 using Prism.Commands;
 using Prism.Navigation;
 
@@ -16,7 +17,9 @@ namespace DiceRoller.ViewModels
         public GameCreatorPageViewModel(IContext ctx, INavigationService navigationService, IEventAgregator eventAggregator) : base(navigationService)
         {
             _ctx = ctx;
-            _eventAggregator = eventAggregator;
+	        Title = "Game Creator";
+
+			_eventAggregator = eventAggregator;
             DiceList = new ObservableCollection<Dice>();
             SaveCommand = new DelegateCommand(Save, CanSave);
             AddDiceCommand = new DelegateCommand(AddDice);
@@ -30,8 +33,6 @@ namespace DiceRoller.ViewModels
         public DelegateCommand AddDiceCommand { get; set; }
         public DelegateCommand<Dice> EditDiceCommand { get; set; }
         public DelegateCommand<Dice> DeleteDiceCommand { get; set; }
-
-        public string Title { get; set; } = "Game Creator";
 
         private string _name;
         public string Name
@@ -85,7 +86,11 @@ namespace DiceRoller.ViewModels
 
         private void EditDice(Dice dice)
         {
-            var a = 1;
+            var vm = new DiceCreatorPageViewModel(NavigationService, _ctx);
+            vm.SetDice(dice);
+            var page = new DiceCreatorPage { BindingContext = vm };
+
+            App.MasterDetail.Detail.Navigation.PushAsync(page);
         }
 
         private async void DeleteDice(Dice dice)

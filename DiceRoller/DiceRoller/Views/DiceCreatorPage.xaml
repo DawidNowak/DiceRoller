@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DiceRoller.Views.DiceCreatorPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout VerticalOptions="StartAndExpand">
+                <Label Text="{Binding Path}" 
+                       HorizontalOptions="CenterAndExpand" />
+                <Button Text="Set Mini Image" Command="{Binding SetMiniImageCommand}"></Button>
+                <Image Source="{Binding MiniImageSource}"/>
+            </StackLayout>
+            <Button Text="Save"></Button>
+        </StackLayout>
+        
+    </ContentPage.Content>
+</ContentPage>
