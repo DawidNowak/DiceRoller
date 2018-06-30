@@ -2,7 +2,7 @@
 
 namespace DiceRoller.Interfaces
 {
-    public interface IGameCreatorView
+    public interface IGameCreatorView : ICreatorView
     {
         Task<bool> DisplayAlert(string diceName);
     }

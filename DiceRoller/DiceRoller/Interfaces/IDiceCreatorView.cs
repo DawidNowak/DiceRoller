@@ -4,9 +4,8 @@ using DiceRoller.DataAccess.Models;
 
 namespace DiceRoller.Interfaces
 {
-    public interface IDiceCreatorView
+    public interface IDiceCreatorView : ICreatorView
     {
-        Task<bool> ImageSourceAlert();
 	    void AddWall(SwipeableImage wall);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DiceRoller.Controls;
+using DiceRoller.DataAccess.Helpers;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Helpers;
 using DiceRoller.Interfaces;
@@ -25,7 +26,7 @@ namespace DiceRoller.Views
 
 	    public async Task<bool> ImageSourceAlert()
 	    {
-	        return await DisplayAlert("Set Mini Image", "Which image source you want to use?", "File", "Camera");
+	        return await DisplayAlert("Set Mini Image", $"{Consts.PictureNote}. Which image source you want to use?", "File", "Camera");
         }
 
 		public void AddWall(SwipeableImage wall)

@@ -106,7 +106,11 @@ namespace DiceRoller.ViewModels
 
 		private async void SetLogoImage()
 		{
-			LogoImgBytes = await CameraHelper.TakePicture();
+			if (await View.ImageSourceAlert())	//file
+			{
+				
+			}
+			else LogoImgBytes = await CameraHelper.TakePicture();
 		}
 	}
 }
