@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:DiceRoller.Controls"
              x:Name="GameCreator"
              x:Class="DiceRoller.Views.GameCreatorPage">
     <ContentPage.Content>
@@ -8,6 +9,9 @@
             <StackLayout VerticalOptions="StartAndExpand">
                 <Label Text="Game creator"/>
                 <Entry Text="{Binding Name}" Placeholder="game name..."></Entry>
+                <controls:SetImageControl Text="Game Logo Image" 
+                                          ImageSource="{Binding LogoImgBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}"
+                                          Command="{Binding SetLogoImageCommand}"/>
                 <Button Text="Add Dice" Command="{Binding AddDiceCommand}"></Button>
                 <ListView ItemsSource="{Binding DiceList, Mode=TwoWay}">
                     <ListView.ItemTemplate>

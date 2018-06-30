@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:DiceRoller.Controls;assembly=DiceRoller"
              x:Class="DiceRoller.Views.DiceCreatorPage">
     <ContentPage.Content>
         <StackLayout>
@@ -8,9 +9,18 @@
                 <Label Text="{Binding Path}" 
                        HorizontalOptions="CenterAndExpand" />
                 <Button Text="Set Mini Image" Command="{Binding SetMiniImageCommand}"></Button>
-                <Image Source="{Binding MiniImageSource}"/>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                    <Label Text="Mini Image"></Label>
+                    <Image Source="{Binding MiniImageSource}" 
+                           HeightRequest="36"
+                           WidthRequest="36"/>
+                </StackLayout>
+                <Button Text="Add dice wall" Command="{Binding AddDiceWallCommand}"/>
+                <controls:WrapLayout x:Name="DiceWallLayout">
+
+                </controls:WrapLayout>
             </StackLayout>
-            <Button Text="Save"></Button>
+            <Button Text="Save" Command="{Binding SaveCommand}"></Button>
         </StackLayout>
         
     </ContentPage.Content>

@@ -1,4 +1,7 @@
 ﻿using System.Threading.Tasks;
+using DiceRoller.Controls;
+using DiceRoller.DataAccess.Models;
+using DiceRoller.Helpers;
 using DiceRoller.Interfaces;
 using DiceRoller.ViewModels;
 using Xamarin.Forms;
@@ -24,5 +27,10 @@ namespace DiceRoller.Views
 	    {
 	        return await DisplayAlert("Set Mini Image", "Which image source you want to use?", "File", "Camera");
         }
+
+		public void AddWall(SwipeableImage wall)
+		{
+			DiceWallLayout.Children.Add(wall);
+		}
 	}
 }

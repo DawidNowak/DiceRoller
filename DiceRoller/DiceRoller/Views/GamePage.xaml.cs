@@ -35,13 +35,7 @@ namespace DiceRoller.Views
 
             if (!mini.IsGenerated)
             {
-                diceImg = new SwipeableImage
-                {
-                    Source = BlobHelper.GetImgSource(mini.Walls.ElementAt(rand.Next(0, mini.Walls.Count)).Image),
-                    BindingContext = mini,
-                    HeightRequest = 64d,
-                    WidthRequest = 64d
-                };
+	            diceImg = ImageHelper.DrawDice(mini);
                 Thread.Sleep(10);
             }
             else

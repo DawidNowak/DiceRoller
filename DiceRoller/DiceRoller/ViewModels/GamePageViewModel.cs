@@ -57,13 +57,7 @@ namespace DiceRoller.ViewModels
         {
             Game.Dice.ForEach(d =>
             {
-                var img = new Image
-                {
-                    Source = BlobHelper.GetImgSource(d.MiniImage),
-                    BindingContext = d,
-                    HeightRequest = 36d,
-                    WidthRequest = 36d
-                };
+	            var img = ImageHelper.DrawMini(d);
 
 #pragma warning disable CS0618 // Type or member is obsolete
                 img.GestureRecognizers.Add(new TapGestureRecognizer(view =>

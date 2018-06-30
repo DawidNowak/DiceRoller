@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using DiceRoller.Controls;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
+using DiceRoller.Helpers;
 using DiceRoller.Interfaces;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Prism.Commands;
 using Prism.Navigation;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace DiceRoller.ViewModels
 {
@@ -20,9 +24,14 @@ namespace DiceRoller.ViewModels
 		{
 			_ctx = ctx;
 			SetMiniImageCommand = new DelegateCommand(SetImage);
+			AddDiceWallCommand = new DelegateCommand(AddDiceWall);
+			SaveCommand = new DelegateCommand(Save);
+			DiceWalls = new ObservableCollection<SwipeableImage>();
 		}
 
 		public DelegateCommand SetMiniImageCommand { get; set; }
+		public DelegateCommand AddDiceWallCommand { get; set; }
+		public DelegateCommand SaveCommand { get; set; }
 
 		private Dice _dice;
 
@@ -30,6 +39,15 @@ namespace DiceRoller.ViewModels
 		{
 			_dice = dice;
 			Path = _dice.Path.Replace(". Mini image not set.", "");
+			_dice.Walls.ForEach(w =>
+			{
+				DiceWalls.Add(new SwipeableImage
+				{
+					Source = BlobHelper.GetImgSource(w.Image),
+					HeightRequest = 36d,
+					WidthRequest = 36d
+				});
+			});
 		}
 
 		private string _path;
@@ -48,39 +66,42 @@ namespace DiceRoller.ViewModels
 			set => SetProperty(ref _miniImageSource, value);
 		}
 
+		private ObservableCollection<SwipeableImage> _diceWalls;
+
+		public ObservableCollection<SwipeableImage> DiceWalls
+		{
+			get => _diceWalls;
+			set => SetProperty(ref _diceWalls, value);
+		}
+
 		private async void SetImage()
 		{
 			if (await View.ImageSourceAlert())  //File
 			{
 
 			}
-			else //Camera
+			else MiniImageSource = BlobHelper.GetImgSource(await CameraHelper.TakePicture());
+		}
+
+		private async void AddDiceWall()
+		{
+			var wall = new DiceWall
 			{
-				await CrossMedia.Current.Initialize();
+				Dice = _dice,
+				DiceId = _dice.Id,
+				Image = await CameraHelper.TakePicture()
+			};
+			_dice.Walls.Add(wall);
 
-				if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
-				{
-					//View.DisplayAlert("No Camera", "No camera available.", "OK");
-					return;
-				}
+			var img = ImageHelper.DrawDiceWall(wall);
+			DiceWalls.Add(img);
 
-				var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
-				{
-					AllowCropping = true,
-					DefaultCamera = CameraDevice.Rear,
-					SaveToAlbum = false,
-					Name = "test.jpg"
-				});
+			View.AddWall(img);
+		}
 
-				if (file == null)
-					return;
-
-				MiniImageSource = ImageSource.FromStream(() =>
-				{
-					var stream = file.GetStream();
-					return stream;
-				});
-			}
+		private void Save()
+		{
+			
 		}
 	}
 }
