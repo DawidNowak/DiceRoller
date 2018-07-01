@@ -16,6 +16,7 @@ namespace DiceRoller.Helpers
 	{
 		public static async Task<byte[]> TakePicture()
 		{
+			byte[] byteArr;
 			await CrossMedia.Current.Initialize();
 
 			if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
@@ -35,7 +36,19 @@ namespace DiceRoller.Helpers
 				CompressionQuality = 80
 			});
 
-			return file != null ? FlipToPortrait(file) : new byte[0];
+			if (file != null)
+			{
+				using (var memStream = new MemoryStream())
+				{
+					file.GetStream().CopyTo(memStream);
+					file.Dispose();
+					byteArr = memStream.ToArray();
+				}
+			}
+			else byteArr = new byte[0];
+
+			return byteArr;
+			//return file != null ? FlipToPortrait(file) : new byte[0];
 		}
 
 		private static byte[] FlipToPortrait(MediaFile file)

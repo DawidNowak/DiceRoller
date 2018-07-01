@@ -18,7 +18,8 @@ namespace DiceRoller
 {
     public partial class App : PrismApplication
     {
-        public static MasterDetailPage MasterDetail { get; set; }
+	    public static byte[] CroppedImage;
+		public static MasterDetailPage MasterDetail { get; set; }
         public static IContainerProvider GlobalContainer;
         public App() : this(null) { }
 

@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using Android.Content.Res;
+using DiceRoller.Controls;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Helpers;
@@ -106,11 +109,22 @@ namespace DiceRoller.ViewModels
 
 		private async void SetLogoImage()
 		{
-			if (await View.ImageSourceAlert())	//file
+			if (await View.ImageSourceAlert())  //file
 			{
-				
+
 			}
 			else LogoImgBytes = await CameraHelper.TakePicture();
+
+			App.MasterDetail.IsPresented = false;
+			await App.MasterDetail.Detail.Navigation.PushAsync(new CropView(LogoImgBytes, Refresh));
+		}
+
+		private void Refresh()
+		{
+			if (App.CroppedImage != null)
+			{
+				LogoImgBytes = App.CroppedImage;
+			}
 		}
 	}
 }
