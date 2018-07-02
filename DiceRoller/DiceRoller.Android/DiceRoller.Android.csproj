@@ -94,6 +94,7 @@
     <Compile Include="CustomRenderers\CropViewRenderer.cs" />
     <Compile Include="CustomRenderers\SwipeableDroidImageRenderer.cs" />
     <Compile Include="Helpers\DbPathHelper.cs" />
+    <Compile Include="Helpers\DeviceOrientation.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -4,6 +4,7 @@ using Android;
 using Android.Graphics;
 using Android.Media;
 using DiceRoller.Extensions;
+using DiceRoller.Interfaces;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Xamarin.Forms;
@@ -36,19 +37,26 @@ namespace DiceRoller.Helpers
 				CompressionQuality = 80
 			});
 
+			var orientation = DependencyService.Get<IDeviceOrientation>().GetOrientation();
+
 			if (file != null)
 			{
-				using (var memStream = new MemoryStream())
+				if (orientation == DeviceOrientations.Portrait)
 				{
-					file.GetStream().CopyTo(memStream);
-					file.Dispose();
-					byteArr = memStream.ToArray();
+					byteArr = FlipToPortrait(file);
+				}
+				else
+				{
+					using (var memStream = new MemoryStream())
+					{
+						file.GetStream().CopyTo(memStream);
+						file.Dispose();
+						byteArr = memStream.ToArray();
+					}
 				}
 			}
 			else byteArr = new byte[0];
-
 			return byteArr;
-			//return file != null ? FlipToPortrait(file) : new byte[0];
 		}
 
 		private static byte[] FlipToPortrait(MediaFile file)
@@ -65,7 +73,7 @@ namespace DiceRoller.Helpers
 			byte[] bitmapData;
 			using (var stream = new MemoryStream())
 			{
-				bitmap.Compress(Bitmap.CompressFormat.Jpeg, 0, stream);
+				bitmap.Compress(Bitmap.CompressFormat.Jpeg, 100, stream);
 				bitmapData = stream.ToArray();
 			}
 
