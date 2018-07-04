@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using Android.Content.Res;
+﻿using System.Collections.ObjectModel;
 using DiceRoller.Controls;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
@@ -113,10 +111,7 @@ namespace DiceRoller.ViewModels
 			{
 
 			}
-			else LogoImgBytes = await CameraHelper.TakePicture();
-
-			App.MasterDetail.IsPresented = false;
-			await App.MasterDetail.Detail.Navigation.PushAsync(new CropView(LogoImgBytes, Refresh));
+			else LogoImgBytes = await CameraHelper.TakePicture(Refresh);
 		}
 
 		private void Refresh()

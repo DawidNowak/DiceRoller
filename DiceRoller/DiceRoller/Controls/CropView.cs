@@ -24,7 +24,7 @@ namespace DiceRoller.Controls
 		    base.OnDisappearing();
 
 		    if (DidCrop)
-			    RefreshAction.Invoke();
+			    RefreshAction?.Invoke();
 	    }
 	}
 }

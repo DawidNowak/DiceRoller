@@ -19,9 +19,9 @@
                             <ViewCell>
                                 <ViewCell.ContextActions>
                                     <MenuItem Text="Edit" Command="{Binding Source={x:Reference GameCreator}, Path=BindingContext.EditDiceCommand}"
-                                              CommandParameter="{Binding .}"></MenuItem>
+                                              CommandParameter="{Binding .}"/>
                                     <MenuItem Text="Delete" Command="{Binding Source={x:Reference GameCreator}, Path=BindingContext.DeleteDiceCommand}"
-                                              CommandParameter="{Binding .}"></MenuItem>
+                                              CommandParameter="{Binding .}"/>
                                 </ViewCell.ContextActions>
                                 <StackLayout Orientation="Vertical">
                                     <Label Text="{Binding Path}" Margin="0,10" HorizontalTextAlignment="Center" IsVisible="{Binding MiniImage, 

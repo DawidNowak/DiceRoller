@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiceRoller.iOS", "DiceRolle
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiceRoller.DataAccess", "DiceRoller.DataAccess\DiceRoller.DataAccess.csproj", "{78FCE072-E964-4EED-BA94-00C3FB79C742}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xam.Plugins.ImageCropper.Droid", "..\..\Users\dnowak3\Desktop\Xam.Plugins.ImageCropper-master\Droid\Xam.Plugins.ImageCropper.Droid.csproj", "{17BD0F49-0BAC-45BE-A68E-77BC61342715}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xam.Plugins.ImageCropper.Droid", "Xam.Plugin.ImageCropper\Xam.Plugins.ImageCropper.Droid.csproj", "{17BD0F49-0BAC-45BE-A68E-77BC61342715}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

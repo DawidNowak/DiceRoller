@@ -34,13 +34,13 @@ namespace DiceRoller.Helpers
 		    };
 		}
 
-	    public static SwipeableImage DrawDiceWall(DiceWall wall)
+	    public static SwipeableImage DrawDiceWall(DiceWall wall, double size = 36d)
 	    {
 		    return new SwipeableImage
 		    {
 			    Source = BlobHelper.GetImgSource(wall.Image),
-			    WidthRequest = 36d,
-			    HeightRequest = 36d
+			    WidthRequest = size,
+			    HeightRequest = size
 		    };
 	    }
     }

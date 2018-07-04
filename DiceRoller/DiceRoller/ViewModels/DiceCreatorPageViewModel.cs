@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using DiceRoller.Controls;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Helpers;
 using DiceRoller.Interfaces;
-using Plugin.Media;
-using Plugin.Media.Abstractions;
 using Prism.Commands;
 using Prism.Navigation;
 using Xamarin.Forms;
@@ -17,6 +14,7 @@ namespace DiceRoller.ViewModels
 	public class DiceCreatorPageViewModel : ViewModelBase
 	{
 		private IContext _ctx;
+		private DiceWall _wall;
 
 		public IDiceCreatorView View;
 
@@ -80,28 +78,41 @@ namespace DiceRoller.ViewModels
 			{
 
 			}
-			else MiniImageSource = BlobHelper.GetImgSource(await CameraHelper.TakePicture());
+			else MiniImageSource = BlobHelper.GetImgSource(await CameraHelper.TakePicture(RefreshMini));
 		}
 
 		private async void AddDiceWall()
 		{
-			var wall = new DiceWall
+			_wall = new DiceWall
 			{
 				Dice = _dice,
 				DiceId = _dice.Id,
-				Image = await CameraHelper.TakePicture()
+				Image = await CameraHelper.TakePicture(RefreshWall)
 			};
-			_dice.Walls.Add(wall);
 
-			var img = ImageHelper.DrawDiceWall(wall);
+			_dice.Walls.Add(_wall);
+		}
+
+		private void RefreshWall()
+		{
+			if (App.CroppedImage != null)
+				_wall.Image = App.CroppedImage;
+
+			var img = ImageHelper.DrawDiceWall(_wall, 64d);
 			DiceWalls.Add(img);
 
 			View.AddWall(img);
 		}
 
+		private void RefreshMini()
+		{
+			if (App.CroppedImage != null)
+				MiniImageSource = BlobHelper.GetImgSource(App.CroppedImage);
+		}
+
 		private void Save()
 		{
-			
+
 		}
 	}
 }

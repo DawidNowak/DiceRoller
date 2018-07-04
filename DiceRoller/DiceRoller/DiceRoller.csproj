@@ -130,6 +130,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\DiceRoller.DataAccess\DiceRoller.DataAccess.csproj" />
+    <ProjectReference Include="..\..\Xam.Plugin.ImageCropper\Xam.Plugins.ImageCropper.Droid.csproj" />
   </ItemGroup>
 
   <ItemGroup>

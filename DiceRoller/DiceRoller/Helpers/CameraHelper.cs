@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Android;
 using Android.Graphics;
 using Android.Media;
+using DiceRoller.Controls;
 using DiceRoller.Extensions;
 using DiceRoller.Interfaces;
 using Plugin.Media;
@@ -15,7 +17,7 @@ namespace DiceRoller.Helpers
 {
 	public static class CameraHelper
 	{
-		public static async Task<byte[]> TakePicture()
+		public static async Task<byte[]> TakePicture(Action refresh)
 		{
 			byte[] byteArr;
 			await CrossMedia.Current.Initialize();
@@ -54,8 +56,15 @@ namespace DiceRoller.Helpers
 						byteArr = memStream.ToArray();
 					}
 				}
+
+				await App.MasterDetail.Detail.Navigation.PushAsync(new CropView(byteArr, refresh));
+				if (App.CroppedImage != null)
+				{
+					byteArr = App.CroppedImage;
+				}
 			}
 			else byteArr = new byte[0];
+			
 			return byteArr;
 		}
 

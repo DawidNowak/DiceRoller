@@ -16,9 +16,7 @@
                            WidthRequest="36"/>
                 </StackLayout>
                 <Button Text="Add dice wall" Command="{Binding AddDiceWallCommand}"/>
-                <controls:WrapLayout x:Name="DiceWallLayout">
-
-                </controls:WrapLayout>
+                <controls:WrapLayout x:Name="DiceWallLayout"/>
             </StackLayout>
             <Button Text="Save" Command="{Binding SaveCommand}"></Button>
         </StackLayout>
