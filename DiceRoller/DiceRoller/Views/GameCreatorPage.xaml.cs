@@ -26,9 +26,9 @@ namespace DiceRoller.Views
 	        return await DisplayAlert("Confirm", $"Delete {diceName}?", "Yes", "No");
         }
 
-		public async Task<bool> ImageSourceAlert()
+		public async Task<bool> ImageSourceAlert(string imgType)
 		{
-			return await DisplayAlert("Set Logo Image", $"{Consts.PictureNote}. Which image source you want to use?", "File", "Camera");
+			return await DisplayAlert($"Set {imgType}", $"{Consts.PictureNote}. Which image source you want to use?", "File", "Camera");
 		}
 	}
 }

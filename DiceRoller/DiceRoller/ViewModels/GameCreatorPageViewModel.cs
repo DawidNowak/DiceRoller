@@ -1,5 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using DiceRoller.Controls;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Helpers;
@@ -7,6 +7,7 @@ using DiceRoller.Interfaces;
 using DiceRoller.Views;
 using Prism.Commands;
 using Prism.Navigation;
+using Xamarin.Forms.Internals;
 
 namespace DiceRoller.ViewModels
 {
@@ -14,6 +15,7 @@ namespace DiceRoller.ViewModels
 	{
 		private readonly IContext _ctx;
 		private readonly IEventAgregator _eventAggregator;
+		private Game _game;
 
 		public GameCreatorPageViewModel(IContext ctx, INavigationService navigationService, IEventAgregator eventAggregator) : base(navigationService)
 		{
@@ -27,6 +29,13 @@ namespace DiceRoller.ViewModels
 			EditDiceCommand = new DelegateCommand<Dice>(EditDice);
 			DeleteDiceCommand = new DelegateCommand<Dice>(DeleteDice);
 			SetLogoImageCommand = new DelegateCommand(SetLogoImage);
+
+			_game = new Game
+			{
+				Id = _ctx.GetNextId<Game>(),
+				IsEditable = true,
+				Dice = new List<Dice>()
+			};
 		}
 
 		public IGameCreatorView View { get; set; }
@@ -44,6 +53,7 @@ namespace DiceRoller.ViewModels
 			set
 			{
 				SetProperty(ref _name, value);
+				_game.Name = value;
 				SaveCommand.RaiseCanExecuteChanged();
 			}
 		}
@@ -52,29 +62,26 @@ namespace DiceRoller.ViewModels
 		public byte[] LogoImgBytes
 		{
 			get => _logoImgBytes;
-			set => SetProperty(ref _logoImgBytes, value);
+			set
+			{
+				SetProperty(ref _logoImgBytes, value);
+				_game.LogoImage = value;
+			} 
 		}
 
-		private ObservableCollection<Dice> _dice;
+		private ObservableCollection<Dice> _diceList;
 
 		public ObservableCollection<Dice> DiceList
 		{
-			get => _dice;
-			set => SetProperty(ref _dice, value);
+			get => _diceList;
+			set => SetProperty(ref _diceList, value);
 		}
 
-		private void Save()
+		private async void Save()
 		{
-			var game = new Game
-			{
-				Id = _ctx.GetNextId<Game>(),
-				IsEditable = true,
-				Name = Name,
-				LogoImage = LogoImgBytes
-			};
-
-			_ctx.InsertOrReplace(game);
+			_ctx.InsertOrReplace(_game);
 			_eventAggregator.Publish<GameChangedEvent>();
+			await App.MasterDetail.Detail.Navigation.PopAsync();
 		}
 
 		private bool CanSave()
@@ -84,17 +91,23 @@ namespace DiceRoller.ViewModels
 
 		private void AddDice()
 		{
-			DiceList.Add(new Dice
+			var dice = new Dice
 			{
+				Id = _ctx.GetNextId<Dice>(),
+				Game = _game,
+				GameId = _game.Id,
 				Path = $"Dice no.{DiceList.Count + 1}. Mini image not set.",
 				Walls = new ObservableCollection<DiceWall>()
-			});
+			};
+			DiceList.Add(dice);
+			_game.Dice.Add(dice);
 		}
 
 		private void EditDice(Dice dice)
 		{
 			var vm = new DiceCreatorPageViewModel(NavigationService, _ctx);
 			vm.SetDice(dice);
+			vm.RefreshGame = RefreshGame;
 			var page = new DiceCreatorPage { BindingContext = vm };
 
 			App.MasterDetail.Detail.Navigation.PushAsync(page);
@@ -107,19 +120,29 @@ namespace DiceRoller.ViewModels
 
 		private async void SetLogoImage()
 		{
-			if (await View.ImageSourceAlert())  //file
+			if (await View.ImageSourceAlert("Logo image"))  //file
 			{
-
+				LogoImgBytes = await CameraHelper.PickPhoto(RefreshLogo);
 			}
-			else LogoImgBytes = await CameraHelper.TakePicture(Refresh);
+			else LogoImgBytes = await CameraHelper.TakePhoto(RefreshLogo);
 		}
 
-		private void Refresh()
+		private void RefreshLogo()
 		{
 			if (App.CroppedImage != null)
 			{
 				LogoImgBytes = App.CroppedImage;
 			}
+		}
+
+		private void RefreshGame()
+		{
+			DiceList.Clear();
+			_game.Dice.ForEach(d =>
+			{
+				DiceList.Add(d);
+			});
+			SaveCommand.RaiseCanExecuteChanged();
 		}
 	}
 }

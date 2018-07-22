@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using DiceRoller.Controls;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
@@ -13,7 +14,7 @@ namespace DiceRoller.ViewModels
 {
 	public class DiceCreatorPageViewModel : ViewModelBase
 	{
-		private IContext _ctx;
+		private readonly IContext _ctx;
 		private DiceWall _wall;
 
 		public IDiceCreatorView View;
@@ -27,6 +28,7 @@ namespace DiceRoller.ViewModels
 			DiceWalls = new ObservableCollection<SwipeableImage>();
 		}
 
+		public Action RefreshGame { get; set; }
 		public DelegateCommand SetMiniImageCommand { get; set; }
 		public DelegateCommand AddDiceWallCommand { get; set; }
 		public DelegateCommand SaveCommand { get; set; }
@@ -46,6 +48,7 @@ namespace DiceRoller.ViewModels
 					WidthRequest = 36d
 				});
 			});
+			if (_dice.MiniImage != null) MiniImageSource = BlobHelper.GetImgSource(_dice.MiniImage);
 		}
 
 		private string _path;
@@ -74,20 +77,36 @@ namespace DiceRoller.ViewModels
 
 		private async void SetImage()
 		{
-			if (await View.ImageSourceAlert())  //File
+			byte[] img;
+			if (await View.ImageSourceAlert("Mini image")) //File
 			{
-
+				img = await CameraHelper.PickPhoto(RefreshMini);
 			}
-			else MiniImageSource = BlobHelper.GetImgSource(await CameraHelper.TakePicture(RefreshMini));
+			else
+			{
+				img = await CameraHelper.TakePhoto(RefreshMini);
+			}
+			MiniImageSource = BlobHelper.GetImgSource(img);
+			_dice.MiniImage = img;
 		}
 
 		private async void AddDiceWall()
 		{
+			byte[] img;
+			if (await View.ImageSourceAlert("Dice wall image")) //File
+			{
+				img = await CameraHelper.PickPhoto(RefreshWall);
+			}
+			else
+			{
+				img = await CameraHelper.TakePhoto(RefreshWall);
+			}
+
 			_wall = new DiceWall
 			{
 				Dice = _dice,
 				DiceId = _dice.Id,
-				Image = await CameraHelper.TakePicture(RefreshWall)
+				Image = img
 			};
 
 			_dice.Walls.Add(_wall);
@@ -107,12 +126,20 @@ namespace DiceRoller.ViewModels
 		private void RefreshMini()
 		{
 			if (App.CroppedImage != null)
+			{
+				_dice.MiniImage = App.CroppedImage;		
 				MiniImageSource = BlobHelper.GetImgSource(App.CroppedImage);
+			}
 		}
 
-		private void Save()
+		private async void Save()
 		{
-
+			var nextId = _ctx.GetNextId<DiceWall>();
+			_dice.Walls.ForEach(w => w.Id = nextId++);
+			RefreshGame?.Invoke();
+			_ctx.InsertOrReplace(_dice);
+			_dice.Walls.ForEach(w => _ctx.InsertOrReplace(w));
+			await App.MasterDetail.Detail.Navigation.PopAsync();
 		}
 	}
 }

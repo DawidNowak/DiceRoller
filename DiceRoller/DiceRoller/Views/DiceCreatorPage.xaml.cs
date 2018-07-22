@@ -24,9 +24,9 @@ namespace DiceRoller.Views
 	        base.OnBindingContextChanged();
 	    }
 
-	    public async Task<bool> ImageSourceAlert()
+	    public async Task<bool> ImageSourceAlert(string imgType)
 	    {
-	        return await DisplayAlert("Set Mini Image", $"{Consts.PictureNote}. Which image source you want to use?", "File", "Camera");
+	        return await DisplayAlert($"Set {imgType}", $"{Consts.PictureNote}. Which image source you want to use?", "File", "Camera");
         }
 
 		public void AddWall(SwipeableImage wall)

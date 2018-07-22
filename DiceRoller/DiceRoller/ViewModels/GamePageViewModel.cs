@@ -55,6 +55,7 @@ namespace DiceRoller.ViewModels
 
         private void PopulateDiceMinis()
         {
+	        var a = _ctx.GetAll<Dice>();
             Game.Dice.ForEach(d =>
             {
 	            var img = ImageHelper.DrawMini(d);

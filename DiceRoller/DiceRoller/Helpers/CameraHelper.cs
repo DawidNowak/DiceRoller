@@ -1,25 +1,19 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using Android;
 using Android.Graphics;
-using Android.Media;
 using DiceRoller.Controls;
-using DiceRoller.Extensions;
 using DiceRoller.Interfaces;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Xamarin.Forms;
-using Image = Xamarin.Forms.Image;
-using MediaOrientation = Android.Media.Orientation;
 
 namespace DiceRoller.Helpers
 {
 	public static class CameraHelper
 	{
-		public static async Task<byte[]> TakePicture(Action refresh)
+		public static async Task<byte[]> TakePhoto(Action refresh)
 		{
-			byte[] byteArr;
 			await CrossMedia.Current.Initialize();
 
 			if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
@@ -39,6 +33,50 @@ namespace DiceRoller.Helpers
 				CompressionQuality = 80
 			});
 
+			return await SetPhoto(file, refresh);
+		}
+
+		private static byte[] FlipToPortrait(MediaFile file)
+		{
+			var options = new BitmapFactory.Options { InJustDecodeBounds = false };
+			var bitmap = BitmapFactory.DecodeFile(file.Path, options);
+
+			var mtx = new Matrix();
+			mtx.PreRotate(90);
+			bitmap = Bitmap.CreateBitmap(bitmap, 0, 0, bitmap.Width, bitmap.Height, mtx, false);
+			mtx.Dispose();
+
+			byte[] bitmapData;
+			using (var stream = new MemoryStream())
+			{
+				bitmap.Compress(Bitmap.CompressFormat.Jpeg, 100, stream);
+				bitmapData = stream.ToArray();
+			}
+
+			return bitmapData;
+		}
+
+		public static async Task<byte[]> PickPhoto(Action refresh)
+		{
+			await CrossMedia.Current.Initialize();
+
+			if (!CrossMedia.Current.IsPickPhotoSupported)
+			{
+				//TODO: DisplayAlert("Photos Not Supported", ":( Permission not granted to photos.", "OK");
+				return null;
+			}
+			var file = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
+			{
+				PhotoSize = PhotoSize.Medium,
+				RotateImage = false
+			});
+
+			return await SetPhoto(file, refresh);
+		}
+
+		private static async Task<byte[]> SetPhoto(MediaFile file, Action refresh)
+		{
+			byte[] byteArr;
 			var orientation = DependencyService.Get<IDeviceOrientation>().GetOrientation();
 
 			if (file != null)
@@ -64,29 +102,8 @@ namespace DiceRoller.Helpers
 				}
 			}
 			else byteArr = new byte[0];
-			
+
 			return byteArr;
-		}
-
-		private static byte[] FlipToPortrait(MediaFile file)
-		{
-			var options = new BitmapFactory.Options { InJustDecodeBounds = false };
-			var bitmap = BitmapFactory.DecodeFile(file.Path, options);
-
-			var mtx = new Matrix();
-			mtx.PreRotate(90);
-			bitmap = Bitmap.CreateBitmap(bitmap, 0, 0, bitmap.Width, bitmap.Height, mtx, false);
-			mtx.Dispose();
-			mtx = null;
-
-			byte[] bitmapData;
-			using (var stream = new MemoryStream())
-			{
-				bitmap.Compress(Bitmap.CompressFormat.Jpeg, 100, stream);
-				bitmapData = stream.ToArray();
-			}
-
-			return bitmapData;
 		}
 	}
 }

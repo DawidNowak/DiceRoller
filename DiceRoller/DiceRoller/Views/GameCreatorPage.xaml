@@ -12,7 +12,7 @@
                 <controls:SetImageControl Text="Game Logo Image" 
                                           ImageSource="{Binding LogoImgBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}"
                                           Command="{Binding SetLogoImageCommand}"/>
-                <Button Text="Add Dice" Command="{Binding AddDiceCommand}"></Button>
+                <Button Text="Add Dice" Command="{Binding AddDiceCommand}"/>
                 <ListView ItemsSource="{Binding DiceList, Mode=TwoWay}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -23,11 +23,11 @@
                                     <MenuItem Text="Delete" Command="{Binding Source={x:Reference GameCreator}, Path=BindingContext.DeleteDiceCommand}"
                                               CommandParameter="{Binding .}"/>
                                 </ViewCell.ContextActions>
-                                <StackLayout Orientation="Vertical">
+                                <StackLayout Orientation="Vertical" VerticalOptions="Center">
                                     <Label Text="{Binding Path}" Margin="0,10" HorizontalTextAlignment="Center" IsVisible="{Binding MiniImage, 
                                         Converter={StaticResource InvertByteArrayToVisibilityConverter}}"/>
                                     <Image Source="{Binding MiniImage, Converter={StaticResource ByteArrayToImageSourceConverter}}" 
-                                           IsVisible="{Binding MiniImage, Converter={StaticResource ByteArrayToVisibilityConverter}}">
+                                           IsVisible="{Binding MiniImage, Converter={StaticResource ByteArrayToVisibilityConverter}}" HeightRequest="36" WidthRequest="36">
                                     </Image>
                                 </StackLayout>
                             </ViewCell>

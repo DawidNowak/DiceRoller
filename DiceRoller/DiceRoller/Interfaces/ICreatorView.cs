@@ -4,6 +4,6 @@ namespace DiceRoller.Interfaces
 {
     public interface ICreatorView
     {
-	    Task<bool> ImageSourceAlert();
+	    Task<bool> ImageSourceAlert(string imgType);
 	}
 }
