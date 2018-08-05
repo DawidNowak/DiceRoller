@@ -1,5 +1,4 @@
-﻿using System;
-using DiceRoller.DataAccess.Context;
+﻿using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Helpers;
 using Prism.Navigation;

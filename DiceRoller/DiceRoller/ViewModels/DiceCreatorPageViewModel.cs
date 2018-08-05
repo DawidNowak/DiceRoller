@@ -24,7 +24,6 @@ namespace DiceRoller.ViewModels
 			_ctx = ctx;
 			SetMiniImageCommand = new DelegateCommand(SetImage);
 			AddDiceWallCommand = new DelegateCommand(AddDiceWall);
-			SaveCommand = new DelegateCommand(save, canSave);
 			DiceWalls = new ObservableCollection<SwipeableImage>();
 		}
 

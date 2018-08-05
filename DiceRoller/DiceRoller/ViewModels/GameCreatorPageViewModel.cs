@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Helpers;
@@ -8,15 +9,13 @@ using DiceRoller.Views;
 using Prism.Commands;
 using Prism.Navigation;
 using Xamarin.Forms;
-using Xamarin.Forms.Internals;
 
 namespace DiceRoller.ViewModels
 {
-	public class GameCreatorPageViewModel : ViewModelBase
+	public class GameCreatorPageViewModel : SaveableBaseViewModel<Game>
 	{
 		private readonly IContext _ctx;
 		private readonly IEventAgregator _eventAggregator;
-		private Game _game;
 
 		public GameCreatorPageViewModel(IContext ctx, INavigationService navigationService, IEventAgregator eventAggregator) : base(navigationService)
 		{
@@ -25,13 +24,12 @@ namespace DiceRoller.ViewModels
 
 			_eventAggregator = eventAggregator;
 			DiceList = new ObservableCollection<Dice>();
-			SaveCommand = new DelegateCommand(Save, CanSave);
 			AddDiceCommand = new DelegateCommand(AddDice);
 			EditDiceCommand = new DelegateCommand<Dice>(EditDice);
 			DeleteDiceCommand = new DelegateCommand<Dice>(DeleteDice);
 			SetLogoImageCommand = new DelegateCommand(SetLogoImage);
 
-			_game = new Game
+			Model = new Game
 			{
 				Id = _ctx.GetNextId<Game>(),
 				IsEditable = true,
@@ -41,7 +39,6 @@ namespace DiceRoller.ViewModels
 
 		public IGameCreatorView View { get; set; }
 
-		public DelegateCommand SaveCommand { get; set; }
 		public DelegateCommand AddDiceCommand { get; set; }
 		public DelegateCommand<Dice> EditDiceCommand { get; set; }
 		public DelegateCommand<Dice> DeleteDiceCommand { get; set; }
@@ -54,7 +51,7 @@ namespace DiceRoller.ViewModels
 			set
 			{
 				SetProperty(ref _name, value);
-				_game.Name = value;
+				Model.Name = value;
 				SaveCommand.RaiseCanExecuteChanged();
 			}
 		}
@@ -66,7 +63,8 @@ namespace DiceRoller.ViewModels
 			set
 			{
 				SetProperty(ref _logoImgBytes, value);
-				_game.LogoImage = value;
+				Model.LogoImage = value;
+				SaveCommand.RaiseCanExecuteChanged();
 			} 
 		}
 
@@ -78,14 +76,14 @@ namespace DiceRoller.ViewModels
 			set => SetProperty(ref _diceList, value);
 		}
 
-		private async void Save()
+		protected override async void save()
 		{
-			_ctx.InsertOrReplace(_game);
+			_ctx.InsertOrReplace(Model);
 			_eventAggregator.Publish<GameChangedEvent>();
 			await App.MasterDetail.Detail.Navigation.PopAsync();
 		}
 
-		private bool CanSave()
+		protected override bool canSave()
 		{
 			return !string.IsNullOrEmpty(Name) && LogoImgBytes != null;
 		}
@@ -96,14 +94,14 @@ namespace DiceRoller.ViewModels
 			var dice = new Dice
 			{
 				Id = _ctx.GetNextId<Dice>(),
-				Game = _game,
-				GameId = _game.Id,
+				Game = Model,
+				GameId = Model.Id,
 				IsGenerated = type,
 				Path = type ? "Generated" : "Picture" + $" Dice no.{DiceList.Count + 1}. Mini image not set.",
 				Walls = new ObservableCollection<DiceWall>()
 			};
 			DiceList.Add(dice);
-			_game.Dice.Add(dice);
+			Model.Dice.Add(dice);
 			EditDice(dice);
 		}
 
@@ -152,7 +150,7 @@ namespace DiceRoller.ViewModels
 		private void RefreshGame()
 		{
 			DiceList.Clear();
-			_game.Dice.ForEach(d =>
+			Model.Dice.ToList().ForEach(d =>
 			{
 				DiceList.Add(d);
 			});
