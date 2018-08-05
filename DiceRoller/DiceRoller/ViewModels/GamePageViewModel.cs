@@ -55,7 +55,6 @@ namespace DiceRoller.ViewModels
 
         private void PopulateDiceMinis()
         {
-	        var a = _ctx.GetAll<Dice>();
             Game.Dice.ForEach(d =>
             {
 	            var img = ImageHelper.DrawMini(d);
@@ -122,8 +121,8 @@ namespace DiceRoller.ViewModels
                 }
                 else
                 {
-                    var wallsCount = Convert.ToInt16(diceCtx.Path.Substring(1, diceCtx.Path.Length - 2));
-                    var skData = DrawHelper.DrawDice(rand.Next(1, wallsCount+1), wallsCount);
+	                var diceData = new DiceData(diceCtx.Path);
+                    var skData = DrawHelper.DrawDice(rand.Next(diceData.StartValue, diceData.WallsCount), diceData.WallsCount);
                     ((SwipeableImage) d).Source = ImageSource.FromStream(() => skData.AsStream());
                 }
 
@@ -141,6 +140,7 @@ namespace DiceRoller.ViewModels
         public void AddDice(Dice toAdd)
         {
             if (_diceNumber >= 12) return;
+
 
             DiceNumber++;
             View?.AddDice(toAdd);

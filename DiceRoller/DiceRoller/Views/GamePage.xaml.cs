@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using DiceRoller.Controls;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Helpers;
@@ -40,8 +41,8 @@ namespace DiceRoller.Views
             }
             else
             {
-                var wallsCount = Convert.ToInt16(mini.Path.Substring(1, mini.Path.Length - 2));
-                var skData = DrawHelper.DrawDice(rand.Next(1, wallsCount+1), wallsCount);
+	            var diceData = new DiceData(mini.Path);
+				var skData = DrawHelper.DrawDice(rand.Next(diceData.StartValue, diceData.StartValue + diceData.WallsCount - 1), diceData.WallsCount);
 
                 diceImg = new SwipeableImage
                 {
@@ -72,7 +73,7 @@ namespace DiceRoller.Views
             minis.ForEach(m => MinisLayout.Children.Add(m));
         }
 
-        protected override void OnDisappearing()
+	    protected override void OnDisappearing()
         {
             ((GamePageViewModel)BindingContext).OnDisappearing();
             base.OnDisappearing();

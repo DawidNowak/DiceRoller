@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DiceRoller.Views.GenDiceCreatorPage"
+             xmlns:triggers="clr-namespace:DiceRoller.Triggers;assembly=DiceRoller"
+             xmlns:views="clr-namespace:DiceRoller.Views;assembly=DiceRoller"
+             x:Name="GenDicePage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="DigitsOnlyEntry" TargetType="Entry">
+                <Style.Triggers>
+                    <EventTrigger Event="TextChanged">
+                        <triggers:DigitsValidationTriggerAction/>
+                    </EventTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <views:SaveableBase>
+            <views:SaveableBase.AdditionalContent>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackLayout Grid.Column="0" Orientation="Vertical">
+                        <Label Text="Walls number"/>
+                        <Entry Style="{StaticResource DigitsOnlyEntry}" Text="{Binding Path=BindingContext.WallsCount, Source={x:Reference GenDicePage}}"/>
+                    </StackLayout>
+                    <StackLayout Grid.Column="1" Orientation="Vertical">
+                        <Label Text="Start value"/>
+                        <Entry Style="{StaticResource DigitsOnlyEntry}" Text="{Binding Path=BindingContext.StartValue, Source={x:Reference GenDicePage}}"/>
+                    </StackLayout>
+                </Grid>
+            </views:SaveableBase.AdditionalContent>
+        </views:SaveableBase>
+    </ContentPage.Content>
+</ContentPage>

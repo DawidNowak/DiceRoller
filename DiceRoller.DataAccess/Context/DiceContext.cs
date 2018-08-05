@@ -79,7 +79,6 @@ namespace DiceRoller.DataAccess.Context
                 d.Walls = _conn.Table<DiceWall>().Where(x => x.DiceId == d.Id).ToArray();
                 d.Walls.ForEach(w => w.Dice = d);
             });
-
         }
 
         private void IncludeDiceRelations(Dice dice)

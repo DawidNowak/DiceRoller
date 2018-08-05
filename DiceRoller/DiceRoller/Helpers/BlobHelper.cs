@@ -8,7 +8,7 @@ namespace DiceRoller.Helpers
     {
         public static byte[] GetBytes(string imgName)
         {
-            var assembly = typeof(BlobHelper).GetTypeInfo().Assembly;
+			var assembly = typeof(BlobHelper).GetTypeInfo().Assembly;
             byte[] buffer;
             using (var s = assembly.GetManifestResourceStream(imgName))
             {

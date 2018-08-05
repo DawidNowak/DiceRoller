@@ -12,7 +12,7 @@ using Xamarin.Forms.Internals;
 
 namespace DiceRoller.ViewModels
 {
-	public class DiceCreatorPageViewModel : ViewModelBase
+	public class DiceCreatorPageViewModel : SaveableBaseViewModel<Dice>
 	{
 		private readonly IContext _ctx;
 		private DiceWall _wall;
@@ -24,22 +24,19 @@ namespace DiceRoller.ViewModels
 			_ctx = ctx;
 			SetMiniImageCommand = new DelegateCommand(SetImage);
 			AddDiceWallCommand = new DelegateCommand(AddDiceWall);
-			SaveCommand = new DelegateCommand(Save);
+			SaveCommand = new DelegateCommand(save, canSave);
 			DiceWalls = new ObservableCollection<SwipeableImage>();
 		}
 
 		public Action RefreshGame { get; set; }
 		public DelegateCommand SetMiniImageCommand { get; set; }
 		public DelegateCommand AddDiceWallCommand { get; set; }
-		public DelegateCommand SaveCommand { get; set; }
 
-		private Dice _dice;
-
-		public void SetDice(Dice dice)
+		public override void SetModel(Dice dice)
 		{
-			_dice = dice;
-			Path = _dice.Path.Replace(". Mini image not set.", "");
-			_dice.Walls.ForEach(w =>
+			base.SetModel(dice);
+			Path = Model.Path.Replace(". Mini image not set.", "");
+			Model.Walls.ForEach(w =>
 			{
 				DiceWalls.Add(new SwipeableImage
 				{
@@ -48,11 +45,10 @@ namespace DiceRoller.ViewModels
 					WidthRequest = 36d
 				});
 			});
-			if (_dice.MiniImage != null) MiniImageSource = BlobHelper.GetImgSource(_dice.MiniImage);
+			if (Model.MiniImage != null) MiniImageSource = BlobHelper.GetImgSource(Model.MiniImage);
 		}
 
 		private string _path;
-
 		public string Path
 		{
 			get => _path;
@@ -60,7 +56,6 @@ namespace DiceRoller.ViewModels
 		}
 
 		private ImageSource _miniImageSource;
-
 		public ImageSource MiniImageSource
 		{
 			get => _miniImageSource;
@@ -68,7 +63,6 @@ namespace DiceRoller.ViewModels
 		}
 
 		private ObservableCollection<SwipeableImage> _diceWalls;
-
 		public ObservableCollection<SwipeableImage> DiceWalls
 		{
 			get => _diceWalls;
@@ -87,7 +81,7 @@ namespace DiceRoller.ViewModels
 				img = await CameraHelper.TakePhoto(RefreshMini);
 			}
 			MiniImageSource = BlobHelper.GetImgSource(img);
-			_dice.MiniImage = img;
+			Model.MiniImage = img;
 		}
 
 		private async void AddDiceWall()
@@ -104,12 +98,12 @@ namespace DiceRoller.ViewModels
 
 			_wall = new DiceWall
 			{
-				Dice = _dice,
-				DiceId = _dice.Id,
+				Dice = Model,
+				DiceId = Model.Id,
 				Image = img
 			};
 
-			_dice.Walls.Add(_wall);
+			Model.Walls.Add(_wall);
 		}
 
 		private void RefreshWall()
@@ -127,19 +121,24 @@ namespace DiceRoller.ViewModels
 		{
 			if (App.CroppedImage != null)
 			{
-				_dice.MiniImage = App.CroppedImage;		
+				Model.MiniImage = App.CroppedImage;
 				MiniImageSource = BlobHelper.GetImgSource(App.CroppedImage);
 			}
 		}
 
-		private async void Save()
+		protected override async void save()
 		{
 			var nextId = _ctx.GetNextId<DiceWall>();
-			_dice.Walls.ForEach(w => w.Id = nextId++);
+			Model.Walls.ForEach(w => w.Id = nextId++);
 			RefreshGame?.Invoke();
-			_ctx.InsertOrReplace(_dice);
-			_dice.Walls.ForEach(w => _ctx.InsertOrReplace(w));
+			_ctx.InsertOrReplace(Model);
+			Model.Walls.ForEach(w => _ctx.InsertOrReplace(w));
 			await App.MasterDetail.Detail.Navigation.PopAsync();
+		}
+
+		protected override bool canSave()
+		{
+			return DiceWalls.Count > 1;
 		}
 	}
 }

@@ -12,6 +12,8 @@ namespace DiceRoller.Helpers
 {
 	public static class CameraHelper
 	{
+
+		//TODO: LOWER PICTURES RESOLUTION, A LOT!!! APP CRASHES AND PERFORMANCE IS TRAGIC
 		public static async Task<byte[]> TakePhoto(Action refresh)
 		{
 			await CrossMedia.Current.Initialize();
@@ -26,11 +28,10 @@ namespace DiceRoller.Helpers
 			{
 				AllowCropping = true,
 				DefaultCamera = CameraDevice.Front,
+				PhotoSize = PhotoSize.Small,
 				SaveToAlbum = false,
-				Name = "test.jpg",
 				RotateImage = false,
-				CustomPhotoSize = 50,
-				CompressionQuality = 80
+				CustomPhotoSize = 50
 			});
 
 			return await SetPhoto(file, refresh);

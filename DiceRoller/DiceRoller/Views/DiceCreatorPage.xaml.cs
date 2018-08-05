@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DiceRoller.Controls;
 using DiceRoller.DataAccess.Helpers;
-using DiceRoller.DataAccess.Models;
-using DiceRoller.Helpers;
 using DiceRoller.Interfaces;
 using DiceRoller.ViewModels;
 using Xamarin.Forms;

@@ -26,6 +26,11 @@ namespace DiceRoller.Views
 	        return await DisplayAlert("Confirm", $"Delete {diceName}?", "Yes", "No");
         }
 
+		public async Task<bool> DiceTypeAlert()
+		{
+			return await DisplayAlert("Add dice", "What type of dice do you want to add?", "Generated", "Pictures");
+		}
+
 		public async Task<bool> ImageSourceAlert(string imgType)
 		{
 			return await DisplayAlert($"Set {imgType}", $"{Consts.PictureNote}. Which image source you want to use?", "File", "Camera");

@@ -5,9 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Images\Classic\d100\mini.jpg" />
-    <None Remove="Images\Classic\d12\mini.jpg" />
-    <None Remove="Images\Classic\d20\mini.jpg" />
+    <None Remove="Images\Classic\d100_1\mini.jpg" />
+    <None Remove="Images\Classic\d12_1\mini.jpg" />
+    <None Remove="Images\Classic\d20_1\mini.jpg" />
+    <None Remove="Images\Classic\d8_1\mini.jpg" />
     <None Remove="Images\Classic\d6\1.jpg" />
     <None Remove="Images\Classic\d6\2.jpg" />
     <None Remove="Images\Classic\d6\3.jpg" />
@@ -15,7 +16,6 @@
     <None Remove="Images\Classic\d6\5.jpg" />
     <None Remove="Images\Classic\d6\6.jpg" />
     <None Remove="Images\Classic\d6\mini.jpg" />
-    <None Remove="Images\Classic\d8\mini.jpg" />
     <None Remove="Images\Classic\logo.jpg" />
     <None Remove="Images\Descent\black\four_shields.jpg" />
     <None Remove="Images\Descent\black\mini.jpg" />
@@ -62,9 +62,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Images\Classic\d100\mini.jpg" />
-    <EmbeddedResource Include="Images\Classic\d12\mini.jpg" />
-    <EmbeddedResource Include="Images\Classic\d20\mini.jpg" />
+    <EmbeddedResource Include="Images\Classic\d100_1\mini.jpg" />
+    <EmbeddedResource Include="Images\Classic\d12_1\mini.jpg" />
+    <EmbeddedResource Include="Images\Classic\d20_1\mini.jpg" />
+    <EmbeddedResource Include="Images\Classic\d8_1\mini.jpg" />
     <EmbeddedResource Include="Images\Classic\d6\1.jpg" />
     <EmbeddedResource Include="Images\Classic\d6\2.jpg" />
     <EmbeddedResource Include="Images\Classic\d6\3.jpg" />
@@ -72,7 +73,6 @@
     <EmbeddedResource Include="Images\Classic\d6\5.jpg" />
     <EmbeddedResource Include="Images\Classic\d6\6.jpg" />
     <EmbeddedResource Include="Images\Classic\d6\mini.jpg" />
-    <EmbeddedResource Include="Images\Classic\d8\mini.jpg" />
     <EmbeddedResource Include="Images\Classic\logo.jpg" />
     <EmbeddedResource Include="Images\Descent\black\four_shields.jpg" />
     <EmbeddedResource Include="Images\Descent\black\mini.jpg" />
@@ -152,6 +152,9 @@
     <EmbeddedResource Update="Controls\DiceControl.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Views\SaveableBase.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Controls\SetImageControl.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -162,6 +165,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\GamePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\GenDiceCreatorPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MasterDetailsPage.xaml">

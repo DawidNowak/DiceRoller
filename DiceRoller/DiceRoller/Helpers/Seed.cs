@@ -24,7 +24,7 @@ namespace DiceRoller.Helpers
             };
 
             games.ForEach(g => g.LogoImage = BlobHelper.GetBytes($"{g.Path}{g.LogoImageSource}"));
-            GiveIds(games);
+            SetIds(games);
             _games = games;
             return games;
         }
@@ -82,37 +82,37 @@ namespace DiceRoller.Helpers
                     Path = "d6.",
                     MiniImageSource = mini
                 },
-                new Dice
+	            new Dice
+	            {
+		            GameId = 3,
+		            Path = "d8_1.",
+		            MiniImageSource = mini,
+		            IsGenerated = true
+	            },
+				new Dice
                 {
                     GameId = 3,
-                    Path = "d8.",
+                    Path = "d12_1.",
                     MiniImageSource = mini,
                     IsGenerated = true
                 },
                 new Dice
                 {
                     GameId = 3,
-                    Path = "d12.",
+                    Path = "d20_1.",
                     MiniImageSource = mini,
                     IsGenerated = true
                 },
                 new Dice
                 {
                     GameId = 3,
-                    Path = "d20.",
-                    MiniImageSource = mini,
-                    IsGenerated = true
-                },
-                new Dice
-                {
-                    GameId = 3,
-                    Path = "d100.",
+                    Path = "d100_1.",
                     MiniImageSource = mini,
                     IsGenerated = true
                 }
             };
 
-            GiveIds(dice);
+            SetIds(dice);
             dice.ForEach(d => d.MiniImage = BlobHelper.GetBytes($"{_games.First(g => g.Id == d.GameId).Path}{d.Path}{d.MiniImageSource}"));
             _dice = dice;
 
@@ -180,7 +180,7 @@ namespace DiceRoller.Helpers
                 new DiceWall {DiceId = 8, ImageSource = "6.jpg"}
             };
 
-            GiveIds(walls);
+            SetIds(walls);
             walls.ForEach(w =>
             {
                 var dice = _dice.First(d => d.Id == w.DiceId);
@@ -199,12 +199,12 @@ namespace DiceRoller.Helpers
                 new Config {Key = Consts.SaveDiceStateKey, Value = true.ToString()}
             };
 
-            GiveIds(configs);
+            SetIds(configs);
 
             return configs;
         }
 
-        private static void GiveIds<T>(IEnumerable<T> list) where T : Entity
+        private static void SetIds<T>(IEnumerable<T> list) where T : Entity
         {
             var index = 1;
             list.ForEach(w =>

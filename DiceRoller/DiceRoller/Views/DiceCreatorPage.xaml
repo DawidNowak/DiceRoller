@@ -2,24 +2,27 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:DiceRoller.Controls;assembly=DiceRoller"
-             x:Class="DiceRoller.Views.DiceCreatorPage">
+             xmlns:views="clr-namespace:DiceRoller.Views;assembly=DiceRoller"
+             x:Class="DiceRoller.Views.DiceCreatorPage"
+             x:Name="CreatorPage">
+
     <ContentPage.Content>
-        <StackLayout>
-            <StackLayout VerticalOptions="StartAndExpand">
-                <Label Text="{Binding Path}" 
-                       HorizontalOptions="CenterAndExpand" />
-                <Button Text="Set Mini Image" Command="{Binding SetMiniImageCommand}"></Button>
-                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                    <Label Text="Mini Image"></Label>
-                    <Image Source="{Binding MiniImageSource}" 
-                           HeightRequest="36"
-                           WidthRequest="36"/>
+        <views:SaveableBase>
+            <views:SaveableBase.AdditionalContent>
+                <StackLayout VerticalOptions="StartAndExpand">
+                    <Label Text="{Binding Path=BindingContext.Path, Source={x:Reference CreatorPage}}" 
+                           HorizontalOptions="CenterAndExpand" />
+                    <Button Text="Set Mini Image" Command="{Binding Path=BindingContext.SetMiniImageCommand, Source={x:Reference CreatorPage}}"/>
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                        <Label Text="Mini Image"></Label>
+                        <Image Source="{Binding Path=BindingContext.MiniImageSource, Source={x:Reference CreatorPage}}" 
+                               HeightRequest="36"
+                               WidthRequest="36"/>
+                    </StackLayout>
+                    <Button Text="Add dice wall" Command="{Binding Path=BindingContext.AddDiceWallCommand, Source={x:Reference CreatorPage}}"/>
+                    <controls:WrapLayout x:Name="DiceWallLayout"/>
                 </StackLayout>
-                <Button Text="Add dice wall" Command="{Binding AddDiceWallCommand}"/>
-                <controls:WrapLayout x:Name="DiceWallLayout"/>
-            </StackLayout>
-            <Button Text="Save" Command="{Binding SaveCommand}"></Button>
-        </StackLayout>
-        
+            </views:SaveableBase.AdditionalContent>
+        </views:SaveableBase>
     </ContentPage.Content>
 </ContentPage>

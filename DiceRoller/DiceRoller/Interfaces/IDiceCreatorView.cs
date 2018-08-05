@@ -1,11 +1,10 @@
-﻿using System.Threading.Tasks;
-using DiceRoller.Controls;
-using DiceRoller.DataAccess.Models;
+﻿using DiceRoller.Controls;
+using Xamarin.Forms;
 
 namespace DiceRoller.Interfaces
 {
     public interface IDiceCreatorView : ICreatorView
     {
-	    void AddWall(SwipeableImage wall);
+	    void AddWall(SwipeableImage img);
     }
 }

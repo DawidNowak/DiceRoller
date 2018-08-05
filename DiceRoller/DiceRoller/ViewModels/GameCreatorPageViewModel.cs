@@ -7,6 +7,7 @@ using DiceRoller.Interfaces;
 using DiceRoller.Views;
 using Prism.Commands;
 using Prism.Navigation;
+using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
 namespace DiceRoller.ViewModels
@@ -89,26 +90,39 @@ namespace DiceRoller.ViewModels
 			return !string.IsNullOrEmpty(Name) && LogoImgBytes != null;
 		}
 
-		private void AddDice()
+		private async void AddDice()
 		{
+			var type = await View.DiceTypeAlert();
 			var dice = new Dice
 			{
 				Id = _ctx.GetNextId<Dice>(),
 				Game = _game,
 				GameId = _game.Id,
-				Path = $"Dice no.{DiceList.Count + 1}. Mini image not set.",
+				IsGenerated = type,
+				Path = type ? "Generated" : "Picture" + $" Dice no.{DiceList.Count + 1}. Mini image not set.",
 				Walls = new ObservableCollection<DiceWall>()
 			};
 			DiceList.Add(dice);
 			_game.Dice.Add(dice);
+			EditDice(dice);
 		}
 
 		private void EditDice(Dice dice)
 		{
-			var vm = new DiceCreatorPageViewModel(NavigationService, _ctx);
-			vm.SetDice(dice);
-			vm.RefreshGame = RefreshGame;
-			var page = new DiceCreatorPage { BindingContext = vm };
+			ContentPage page;
+			if (dice.IsGenerated)
+			{
+				var vm = new GenDiceCreatorPageViewModel(NavigationService, _ctx);
+				vm.SetModel(dice);
+				page = new GenDiceCreatorPage {BindingContext = vm};
+			}
+			else
+			{
+				var vm = new DiceCreatorPageViewModel(NavigationService, _ctx);
+				vm.SetModel(dice);
+				vm.RefreshGame = RefreshGame;
+				page = new DiceCreatorPage {BindingContext = vm};
+			}
 
 			App.MasterDetail.Detail.Navigation.PushAsync(page);
 		}
