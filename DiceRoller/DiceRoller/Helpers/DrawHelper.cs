@@ -38,7 +38,7 @@ namespace DiceRoller.Helpers
 
         private static readonly SKSurface Surface = SKSurface.Create(100, 100, SKColorType.Rgba8888, SKAlphaType.Opaque);
 
-        public static SKData DrawDice(int drawnResult, int diceType)
+        public static SKData DrawDice(int drawnResult, int minValue, int maxValue)
         {
             var canv = Surface.Canvas;
             canv.Clear(SKColors.White);
@@ -48,7 +48,8 @@ namespace DiceRoller.Helpers
             var textWidth = BlackTextColor.MeasureText(drawnResult.ToString());
             canv.DrawText(drawnResult.ToString(), 50f - textWidth/2, 65f, BlackTextColor);
 
-            canv.DrawText(diceType.ToString(), 90f, 25f, GrayTextColor);
+            canv.DrawText(minValue.ToString(), 30f, 25f, GrayTextColor);
+            canv.DrawText(maxValue.ToString(), 90f, 25f, GrayTextColor);
 
             return Surface.Snapshot().Encode(SKEncodedImageFormat.Jpeg, 100);
         }

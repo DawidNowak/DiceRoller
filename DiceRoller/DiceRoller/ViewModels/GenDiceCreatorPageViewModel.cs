@@ -33,30 +33,17 @@ namespace DiceRoller.ViewModels
 		    }
 	    }
 
-	    private int _startValue;
+		private int _startValue;
 	    public int StartValue
 	    {
 		    get => _startValue;
 		    set => SetProperty(ref _startValue, value);
 	    }
 
-	    private ImageSource _miniImageSource;
-
-	    public ImageSource MiniImageSource
-	    {
-		    get => _miniImageSource;
-		    set => SetProperty(ref _miniImageSource, value);
-	    }
-
-		public override void SetModel(Dice model)
-	    {
-		    base.SetModel(model);
-		    if (Model.MiniImage != null) MiniImageSource = BlobHelper.GetImgSource(Model.MiniImage);
-		}
-
 	    protected override async void save()
 	    {
 		    Model.Path = $"d{WallsCount}_{StartValue}.";
+		    Model.MiniImage = DrawHelper.DrawDice(StartValue, StartValue, StartValue + WallsCount - 1).ToArray();
 			_ctx.InsertOrReplace(Model);
 		    await App.MasterDetail.Detail.Navigation.PopAsync();
 		}

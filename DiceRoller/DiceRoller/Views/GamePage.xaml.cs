@@ -13,70 +13,70 @@ using Xamarin.Forms.Internals;
 
 namespace DiceRoller.Views
 {
-    //[XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class GamePage : ContentPage, IGameView
-    {
-        public GamePage()
-        {
-            InitializeComponent();
-        }
+	//[XamlCompilation(XamlCompilationOptions.Compile)]
+	public partial class GamePage : ContentPage, IGameView
+	{
+		public GamePage()
+		{
+			InitializeComponent();
+		}
 
-        protected override void OnBindingContextChanged()
-        {
-            ((GamePageViewModel)BindingContext).View = this;
-            base.OnBindingContextChanged();
-        }
+		protected override void OnBindingContextChanged()
+		{
+			((GamePageViewModel)BindingContext).View = this;
+			base.OnBindingContextChanged();
+		}
 
-        public IList<View> Dice => DiceLayout.Children;
+		public IList<View> Dice => DiceLayout.Children;
 
-        public void AddDice(Dice mini)
-        {
-            var rand = new Random();
-            SwipeableImage diceImg;
+		public void AddDice(Dice mini)
+		{
+			var rand = new Random();
+			SwipeableImage diceImg;
 
-            if (!mini.IsGenerated)
-            {
-	            diceImg = ImageHelper.DrawDice(mini);
-                Thread.Sleep(10);
-            }
-            else
-            {
-	            var diceData = new DiceData(mini.Path);
-				var skData = DrawHelper.DrawDice(rand.Next(diceData.StartValue, diceData.StartValue + diceData.WallsCount - 1), diceData.WallsCount);
+			if (!mini.IsGenerated)
+			{
+				diceImg = ImageHelper.DrawDice(mini);
+				Thread.Sleep(10);
+			}
+			else
+			{
+				var diceData = new DiceData(mini.Path);
+				var skData = DrawHelper.DrawDice(rand.Next(diceData.StartValue, diceData.StartValue + diceData.WallsCount - 1), diceData.StartValue, diceData.StartValue + diceData.WallsCount - 1);
 
-                diceImg = new SwipeableImage
-                {
-                    Source = ImageSource.FromStream(() => skData.AsStream()),
-                    BindingContext = mini,
-                    HeightRequest = 64d,
-                    WidthRequest = 64d
-                };
-            }
+				diceImg = new SwipeableImage
+				{
+					Source = ImageSource.FromStream(() => skData.AsStream()),
+					BindingContext = mini,
+					HeightRequest = 64d,
+					WidthRequest = 64d
+				};
+			}
 
-            diceImg.SwipedLeft += (sender, args) => RemoveDice(DiceLayout.Children.IndexOf(sender));
-            diceImg.SwipedRight += (sender, args) => RemoveDice(DiceLayout.Children.IndexOf(sender));
+			diceImg.SwipedLeft += (sender, args) => RemoveDice(DiceLayout.Children.IndexOf(sender));
+			diceImg.SwipedRight += (sender, args) => RemoveDice(DiceLayout.Children.IndexOf(sender));
 
-            DiceLayout.Children.Add(diceImg);
-        }
+			DiceLayout.Children.Add(diceImg);
+		}
 
-        public void RemoveDice(int index)
-        {
-            if (index < 0) return;
+		public void RemoveDice(int index)
+		{
+			if (index < 0) return;
 
-            DiceLayout.Children.RemoveAt(index);
-            ((GamePageViewModel)BindingContext).DiceNumber--;
-        }
+			DiceLayout.Children.RemoveAt(index);
+			((GamePageViewModel)BindingContext).DiceNumber--;
+		}
 
-        public void RefreshMinis(ICollection<View> minis)
-        {
-            MinisLayout.Children.Clear();
-            minis.ForEach(m => MinisLayout.Children.Add(m));
-        }
+		public void RefreshMinis(ICollection<View> minis)
+		{
+			MinisLayout.Children.Clear();
+			minis.ForEach(m => MinisLayout.Children.Add(m));
+		}
 
-	    protected override void OnDisappearing()
-        {
-            ((GamePageViewModel)BindingContext).OnDisappearing();
-            base.OnDisappearing();
-        }
-    }
+		protected override void OnDisappearing()
+		{
+			((GamePageViewModel)BindingContext).OnDisappearing();
+			base.OnDisappearing();
+		}
+	}
 }

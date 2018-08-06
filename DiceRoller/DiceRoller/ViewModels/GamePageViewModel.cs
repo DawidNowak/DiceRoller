@@ -122,7 +122,8 @@ namespace DiceRoller.ViewModels
                 else
                 {
 	                var diceData = new DiceData(diceCtx.Path);
-                    var skData = DrawHelper.DrawDice(rand.Next(diceData.StartValue, diceData.WallsCount), diceData.WallsCount);
+					//TODO: DrawDice(DiceData data) 
+                    var skData = DrawHelper.DrawDice(rand.Next(diceData.StartValue, diceData.WallsCount + diceData.StartValue -1), diceData.StartValue, diceData.WallsCount + diceData.StartValue - 1);
                     ((SwipeableImage) d).Source = ImageSource.FromStream(() => skData.AsStream());
                 }
 
