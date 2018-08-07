@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using DiceRoller.Controls;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Helpers;
@@ -31,7 +29,6 @@ namespace DiceRoller.Views
 
 		public void AddDice(Dice mini)
 		{
-			var rand = new Random();
 			SwipeableImage diceImg;
 
 			if (!mini.IsGenerated)
@@ -42,7 +39,7 @@ namespace DiceRoller.Views
 			else
 			{
 				var diceData = new DiceData(mini.Path);
-				var skData = DrawHelper.DrawDice(rand.Next(diceData.StartValue, diceData.StartValue + diceData.WallsCount - 1), diceData.StartValue, diceData.StartValue + diceData.WallsCount - 1);
+				var skData = DrawHelper.DrawDice(diceData);
 
 				diceImg = new SwipeableImage
 				{

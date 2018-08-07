@@ -2,7 +2,6 @@
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Helpers;
 using Prism.Navigation;
-using Xamarin.Forms;
 
 namespace DiceRoller.ViewModels
 {
@@ -43,7 +42,7 @@ namespace DiceRoller.ViewModels
 	    protected override async void save()
 	    {
 		    Model.Path = $"d{WallsCount}_{StartValue}.";
-		    Model.MiniImage = DrawHelper.DrawDice(StartValue, StartValue, StartValue + WallsCount - 1).ToArray();
+		    Model.MiniImage = DrawHelper.DrawDice(new DiceData(Model.Path)).ToArray();
 			_ctx.InsertOrReplace(Model);
 		    await App.MasterDetail.Detail.Navigation.PopAsync();
 		}

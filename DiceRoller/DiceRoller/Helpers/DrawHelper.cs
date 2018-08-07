@@ -1,4 +1,5 @@
-﻿using DiceRoller.DataAccess.Models;
+﻿using System;
+using DiceRoller.DataAccess.Models;
 using SkiaSharp;
 
 namespace DiceRoller.Helpers
@@ -38,20 +39,23 @@ namespace DiceRoller.Helpers
 
         private static readonly SKSurface Surface = SKSurface.Create(100, 100, SKColorType.Rgba8888, SKAlphaType.Opaque);
 
-        public static SKData DrawDice(int drawnResult, int minValue, int maxValue)
-        {
-            var canv = Surface.Canvas;
-            canv.Clear(SKColors.White);
+		private static readonly Random Rand = new Random();
+	    public static SKData DrawDice(DiceData data)
+	    {
+			var canv = Surface.Canvas;
+		    canv.Clear(SKColors.White);
 
-            canv.DrawRect(0f,0f,100f,100f, LightGrayStrokeColor);
+		    canv.DrawRect(0f, 0f, 100f, 100f, LightGrayStrokeColor);
 
-            var textWidth = BlackTextColor.MeasureText(drawnResult.ToString());
-            canv.DrawText(drawnResult.ToString(), 50f - textWidth/2, 65f, BlackTextColor);
+		    var drawnResult = Rand.Next(data.StartValue, data.StartValue + data.WallsCount - 1);
+		    var textWidth = BlackTextColor.MeasureText(drawnResult.ToString());
+		    canv.DrawText(drawnResult.ToString(), 50f - textWidth / 2, 65f, BlackTextColor);
 
-            canv.DrawText(minValue.ToString(), 30f, 25f, GrayTextColor);
-            canv.DrawText(maxValue.ToString(), 90f, 25f, GrayTextColor);
+		    var startTextWidth = GrayTextColor.MeasureText(data.StartValue.ToString());
+		    canv.DrawText(data.StartValue.ToString(), 10f + startTextWidth, 25f, GrayTextColor);
+		    canv.DrawText((data.StartValue + data.WallsCount - 1).ToString(), 90f, 25f, GrayTextColor);
 
-            return Surface.Snapshot().Encode(SKEncodedImageFormat.Jpeg, 100);
-        }
+		    return Surface.Snapshot().Encode(SKEncodedImageFormat.Jpeg, 100);
+		}
     }
 }
