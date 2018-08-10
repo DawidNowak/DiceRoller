@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using DiceRoller.Controls;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
@@ -16,8 +17,6 @@ namespace DiceRoller.ViewModels
 	{
 		private readonly IContext _ctx;
 		private DiceWall _wall;
-
-		public IDiceCreatorView View;
 
 		public DiceCreatorPageViewModel(INavigationService navigationService, IContext ctx) : base(navigationService)
 		{
@@ -68,32 +67,37 @@ namespace DiceRoller.ViewModels
 			set => SetProperty(ref _diceWalls, value);
 		}
 
-		private async void SetImage()
+		private async Task<byte[]> GetImage(string alert, Action refresh)
 		{
-			byte[] img;
-			if (await View.ImageSourceAlert("Mini image")) //File
+			var img = new byte[0];
+			if (await View.ImageSourceAlert(alert)) //File
 			{
-				img = await CameraHelper.PickPhoto(RefreshMini);
+				img = await CameraHelper.PickPhoto(refresh);
+				if (img.Length == 0) await PermissionDeniedPopup("storage");
 			}
 			else
 			{
-				img = await CameraHelper.TakePhoto(RefreshMini);
+				img = await CameraHelper.TakePhoto(refresh);
+				if (img.Length == 0) await PermissionDeniedPopup("camera");
 			}
-			MiniImageSource = BlobHelper.GetImgSource(img);
-			Model.MiniImage = img;
+
+			return img;
+		}
+
+		private async void SetImage()
+		{
+			var img = await GetImage("Mini Image", RefreshMini);
+
+			if (img.Length == 0)
+			{
+				MiniImageSource = BlobHelper.GetImgSource(img);
+				Model.MiniImage = img;
+			}
 		}
 
 		private async void AddDiceWall()
 		{
-			byte[] img;
-			if (await View.ImageSourceAlert("Dice wall image")) //File
-			{
-				img = await CameraHelper.PickPhoto(RefreshWall);
-			}
-			else
-			{
-				img = await CameraHelper.TakePhoto(RefreshWall);
-			}
+			var img = await GetImage("Dice wall image", RefreshWall);
 
 			_wall = new DiceWall
 			{
@@ -113,7 +117,7 @@ namespace DiceRoller.ViewModels
 			var img = ImageHelper.DrawDiceWall(_wall, 64d);
 			DiceWalls.Add(img);
 
-			View.AddWall(img);
+			((IDiceCreatorView)View).AddWall(img);
 		}
 
 		private void RefreshMini()

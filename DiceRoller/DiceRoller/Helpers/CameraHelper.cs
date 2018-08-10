@@ -13,26 +13,34 @@ namespace DiceRoller.Helpers
 	public static class CameraHelper
 	{
 
-		//TODO: LOWER PICTURES RESOLUTION, A LOT!!! APP CRASHES AND PERFORMANCE IS TRAGIC
 		public static async Task<byte[]> TakePhoto(Action refresh)
 		{
 			await CrossMedia.Current.Initialize();
 
 			if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
 			{
-				//View.DisplayAlert("No Camera", "No camera available.", "OK");
-				return null;
+				return new byte[0];
 			}
 
-			var file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+			MediaFile file = null;
+
+			try
 			{
-				AllowCropping = true,
-				DefaultCamera = CameraDevice.Front,
-				PhotoSize = PhotoSize.Small,
-				SaveToAlbum = false,
-				RotateImage = false,
-				CustomPhotoSize = 50
-			});
+				file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+				{
+					AllowCropping = true,
+					DefaultCamera = CameraDevice.Front,
+					PhotoSize = PhotoSize.Small,
+					SaveToAlbum = false,
+					RotateImage = false,
+					CustomPhotoSize = 50
+				});
+			}
+			catch (MediaPermissionException e)
+			{
+				//no camera permitted
+				var a = 1;
+			}
 
 			return await SetPhoto(file, refresh);
 		}
@@ -63,14 +71,22 @@ namespace DiceRoller.Helpers
 
 			if (!CrossMedia.Current.IsPickPhotoSupported)
 			{
-				//TODO: DisplayAlert("Photos Not Supported", ":( Permission not granted to photos.", "OK");
-				return null;
+				return new byte[0];
 			}
-			var file = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
+
+			MediaFile file = null;
+			try
 			{
-				PhotoSize = PhotoSize.Medium,
-				RotateImage = false
-			});
+				file = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
+				{
+					PhotoSize = PhotoSize.Medium,
+					RotateImage = false
+				});
+			}
+			catch (MediaPermissionException e)
+			{
+				//no storage permitted
+			}
 
 			return await SetPhoto(file, refresh);
 		}

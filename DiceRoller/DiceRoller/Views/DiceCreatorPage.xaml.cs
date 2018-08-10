@@ -27,6 +27,11 @@ namespace DiceRoller.Views
 	        return await DisplayAlert($"Set {imgType}", $"{Consts.PictureNote}. Which image source you want to use?", "File", "Camera");
         }
 
+		public async Task DisplayPopup(string title, string msg, string cancel)
+		{
+			await DisplayAlert(title, msg, cancel);
+		}
+
 		public void AddWall(SwipeableImage wall)
 		{
 			DiceWallLayout.Children.Add(wall);

@@ -37,8 +37,6 @@ namespace DiceRoller.ViewModels
 			};
 		}
 
-		public IGameCreatorView View { get; set; }
-
 		public DelegateCommand AddDiceCommand { get; set; }
 		public DelegateCommand<Dice> EditDiceCommand { get; set; }
 		public DelegateCommand<Dice> DeleteDiceCommand { get; set; }
@@ -90,7 +88,7 @@ namespace DiceRoller.ViewModels
 
 		private async void AddDice()
 		{
-			var type = await View.DiceTypeAlert();
+			var type = await ((IGameCreatorView)View).DiceTypeAlert();
 			var dice = new Dice
 			{
 				Id = _ctx.GetNextId<Dice>(),
@@ -127,16 +125,21 @@ namespace DiceRoller.ViewModels
 
 		private async void DeleteDice(Dice dice)
 		{
-			if (await View.DisplayAlert(dice.Path.Replace(". Mini image not set.", ""))) DiceList.Remove(dice);
+			if (await ((IGameCreatorView)View).DisplayAlert(dice.Path.Replace(". Mini image not set.", ""))) DiceList.Remove(dice);
 		}
 
 		private async void SetLogoImage()
 		{
-			if (await View.ImageSourceAlert("Logo image"))  //file
+			if (await View.ImageSourceAlert("Logo image")) //file
 			{
 				LogoImgBytes = await CameraHelper.PickPhoto(RefreshLogo);
+				if (LogoImgBytes.Length == 0) await PermissionDeniedPopup("storage");
 			}
-			else LogoImgBytes = await CameraHelper.TakePhoto(RefreshLogo);
+			else
+			{
+				LogoImgBytes = await CameraHelper.TakePhoto(RefreshLogo);
+				if (LogoImgBytes.Length == 0) await PermissionDeniedPopup("camera");
+			}
 		}
 
 		private void RefreshLogo()

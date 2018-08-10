@@ -1,4 +1,6 @@
-﻿using DiceRoller.DataAccess.Models;
+﻿using System.Threading.Tasks;
+using DiceRoller.DataAccess.Models;
+using DiceRoller.Interfaces;
 using Prism.Commands;
 using Prism.Navigation;
 
@@ -6,6 +8,8 @@ namespace DiceRoller.ViewModels
 {
 	public class SaveableBaseViewModel<T> : ViewModelBase where T : Entity
 	{
+		public ICreatorView View { get; set; }
+
 		public SaveableBaseViewModel(INavigationService navigationService) : base(navigationService)
 		{
 			SaveCommand = new DelegateCommand(save, canSave);
@@ -33,6 +37,12 @@ namespace DiceRoller.ViewModels
 		public virtual void SetModel(T model)
 		{
 			Model = model;
+		}
+
+		protected async Task PermissionDeniedPopup(string permissionType)
+		{
+			await View.DisplayPopup("Permission denied", $"Access to {permissionType} is denied, please update device settings",
+				"OK");
 		}
 	}
 }
