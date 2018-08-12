@@ -6,7 +6,6 @@ using DiceRoller.DataAccess.Models;
 using DiceRoller.Helpers;
 using DiceRoller.Views;
 using Prism.Commands;
-using Prism.Events;
 using Prism.Navigation;
 using Xamarin.Forms.Internals;
 
@@ -16,11 +15,13 @@ namespace DiceRoller.ViewModels
     {
         private readonly IContext _ctx;
         private readonly IEventAgregator _eventAggregator;
-        private IList<Game> _games = new List<Game>();
+        private readonly IList<Game> _games = new List<Game>();
 
         public ObservableCollection<Game> Games { get; set; } = new ObservableCollection<Game>();
 
         public DelegateCommand<Game> GameNavigationCommand { get; }
+		public DelegateCommand<Game> EditGameCommand { get; }
+		public DelegateCommand<Game> DeleteGameCommand { get; }
 
         public MainPageViewModel(INavigationService navigationService, IContext ctx, IEventAgregator eventAggregator)
             : base(navigationService)
@@ -30,6 +31,8 @@ namespace DiceRoller.ViewModels
             Title = "Main Page";
 
             GameNavigationCommand = new DelegateCommand<Game>(Navigate);
+			EditGameCommand = new DelegateCommand<Game>(EditGame, CanEdit);
+			DeleteGameCommand = new DelegateCommand<Game>(DeleteGame, CanEdit);
             _eventAggregator.Subscribe<GameChangedEvent>(RefreshGames);
             RefreshGames();
         }
@@ -72,5 +75,27 @@ namespace DiceRoller.ViewModels
             App.MasterDetail.Detail.Navigation.PushAsync(page);
             vm.SetView();
         }
+
+	    private void EditGame(Game game)
+	    {
+		    var vm = new GameCreatorPageViewModel(_ctx, NavigationService, _eventAggregator);
+			vm.SetModel(game);
+		    var page = new GameCreatorPage { BindingContext = vm };
+
+		    App.MasterDetail.Detail.Navigation.PushAsync(page);
+		}
+
+	    private void DeleteGame(Game game)
+	    {
+		    //confirmation
+		    Games.Remove(game);
+			_ctx.Delete(game);
+			RefreshGames();
+	    }
+
+	    private bool CanEdit(Game game)
+	    {
+		    return game?.IsEditable ?? false;
+	    }
     }
 }

@@ -1,4 +1,6 @@
-﻿using DiceRoller.DataAccess.Context;
+﻿using System;
+using System.Collections.Generic;
+using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Helpers;
 using Prism.Navigation;
@@ -13,7 +15,9 @@ namespace DiceRoller.ViewModels
 			_ctx = ctx;
 		}
 
-	    private string _path;
+	    public Action RefreshGame { get; set; }
+
+		private string _path;
 
 	    public string Path
 	    {
@@ -42,8 +46,10 @@ namespace DiceRoller.ViewModels
 	    protected override async void save()
 	    {
 		    Model.Path = $"d{WallsCount}_{StartValue}.";
-		    Model.MiniImage = DrawHelper.DrawDice(new DiceData(Model.Path)).ToArray();
+		    Model.MiniImage = DrawHelper.DrawDice(new DiceData(Model.Path), false).ToArray();
+			Model.Game.Dice = new List<Dice>(Model.Game.Dice) {Model}.ToArray();
 			_ctx.InsertOrReplace(Model);
+			RefreshGame?.Invoke();
 		    await App.MasterDetail.Detail.Navigation.PopAsync();
 		}
 

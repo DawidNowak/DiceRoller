@@ -40,14 +40,14 @@ namespace DiceRoller.Helpers
         private static readonly SKSurface Surface = SKSurface.Create(100, 100, SKColorType.Rgba8888, SKAlphaType.Opaque);
 
 		private static readonly Random Rand = new Random();
-	    public static SKData DrawDice(DiceData data)
+	    public static SKData DrawDice(DiceData data, bool random = true)
 	    {
 			var canv = Surface.Canvas;
 		    canv.Clear(SKColors.White);
 
 		    canv.DrawRect(0f, 0f, 100f, 100f, LightGrayStrokeColor);
 
-		    var drawnResult = Rand.Next(data.StartValue, data.StartValue + data.WallsCount - 1);
+		    var drawnResult = random? Rand.Next(data.StartValue, data.StartValue + data.WallsCount - 1) : data.StartValue;
 		    var textWidth = BlackTextColor.MeasureText(drawnResult.ToString());
 		    canv.DrawText(drawnResult.ToString(), 50f - textWidth / 2, 65f, BlackTextColor);
 

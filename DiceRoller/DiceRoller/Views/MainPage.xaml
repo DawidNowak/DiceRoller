@@ -14,6 +14,12 @@
                     <controls:GameViewCell Command="{Binding Source={x:Reference MainContentPage}, Path=BindingContext.GameNavigationCommand}"
                                                 CommandParameter="{Binding .}">
                         <Image Source="{Binding LogoImage, Converter={StaticResource ByteArrayToImageSourceConverter}}"/>
+                        <controls:GameViewCell.ContextActions>
+                            <MenuItem Text="Edit" Command="{Binding Source={x:Reference MainContentPage}, Path=BindingContext.EditGameCommand}"
+                                      CommandParameter="{Binding .}"/>
+                            <MenuItem Text="Delete" Command="{Binding Source={x:Reference MainContentPage}, Path=BindingContext.DeleteGameCommand}"
+                                      CommandParameter="{Binding .}"/>
+                        </controls:GameViewCell.ContextActions>
                     </controls:GameViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>

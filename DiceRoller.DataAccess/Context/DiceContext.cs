@@ -44,6 +44,11 @@ namespace DiceRoller.DataAccess.Context
             _conn.InsertOrReplace(o);
         }
 
+	    public void Delete(object o)
+	    {
+		    _conn.Delete(o);
+	    }
+
         public T[] GetAll<T>() where T : Entity, new()
         {
             var entities = _conn.Table<T>().ToArray();

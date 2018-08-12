@@ -9,6 +9,7 @@ using DiceRoller.Views;
 using Prism.Commands;
 using Prism.Navigation;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace DiceRoller.ViewModels
 {
@@ -83,7 +84,15 @@ namespace DiceRoller.ViewModels
 
 		protected override bool canSave()
 		{
-			return !string.IsNullOrEmpty(Name) && LogoImgBytes != null;
+			return !string.IsNullOrEmpty(Name) && LogoImgBytes != null && DiceList.Count > 0;
+		}
+
+		public void SetModel(Game game)
+		{
+			Model = game;
+			Name = game.Name;
+			LogoImgBytes = game.LogoImage;
+			RefreshGame();
 		}
 
 		private async void AddDice()
@@ -99,8 +108,9 @@ namespace DiceRoller.ViewModels
 				Walls = new ObservableCollection<DiceWall>()
 			};
 			DiceList.Add(dice);
-			Model.Dice.Add(dice);
+			Model.Dice.ToList().Add(dice);
 			EditDice(dice);
+			SaveCommand.RaiseCanExecuteChanged();
 		}
 
 		private void EditDice(Dice dice)
@@ -110,6 +120,7 @@ namespace DiceRoller.ViewModels
 			{
 				var vm = new GenDiceCreatorPageViewModel(NavigationService, _ctx);
 				vm.SetModel(dice);
+				vm.RefreshGame = RefreshGame;
 				page = new GenDiceCreatorPage {BindingContext = vm};
 			}
 			else
@@ -153,7 +164,7 @@ namespace DiceRoller.ViewModels
 		private void RefreshGame()
 		{
 			DiceList.Clear();
-			Model.Dice.ToList().ForEach(d =>
+			Model.Dice.ForEach(d =>
 			{
 				DiceList.Add(d);
 			});

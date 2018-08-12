@@ -11,6 +11,7 @@ namespace DiceRoller.DataAccess.Context
         void CreateTable<T>() where T : Entity, new();
         int GetNextId<T>() where T : Entity, new();
         void InsertOrReplace(object o);
+	    void Delete(object o);
         T[] GetAll<T>() where T : Entity, new();
         T GetById<T>(int id, bool eagerLoading = true) where T : Entity, new();
         IEnumerable<T> GetBy<T>(Expression<Func<T, bool>> where) where T : Entity, new();

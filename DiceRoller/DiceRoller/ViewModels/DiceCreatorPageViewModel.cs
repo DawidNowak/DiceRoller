@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using DiceRoller.Controls;
 using DiceRoller.DataAccess.Context;
@@ -57,7 +58,11 @@ namespace DiceRoller.ViewModels
 		public ImageSource MiniImageSource
 		{
 			get => _miniImageSource;
-			set => SetProperty(ref _miniImageSource, value);
+			set
+			{
+				SetProperty(ref _miniImageSource, value);
+				SaveCommand.RaiseCanExecuteChanged();
+			}
 		}
 
 		private ObservableCollection<SwipeableImage> _diceWalls;
@@ -107,6 +112,9 @@ namespace DiceRoller.ViewModels
 			};
 
 			Model.Walls.Add(_wall);
+			if (DiceWalls.Count > 0) DiceWalls.RemoveAt(DiceWalls.Count - 1);
+			DiceWalls.Add(ImageHelper.DrawDiceWall(_wall, 64d));
+			SaveCommand.RaiseCanExecuteChanged();
 		}
 
 		private void RefreshWall()
@@ -122,11 +130,10 @@ namespace DiceRoller.ViewModels
 
 		private void RefreshMini()
 		{
-			if (App.CroppedImage != null)
-			{
-				Model.MiniImage = App.CroppedImage;
-				MiniImageSource = BlobHelper.GetImgSource(App.CroppedImage);
-			}
+			if (App.CroppedImage == null) return;
+
+			Model.MiniImage = App.CroppedImage;
+			MiniImageSource = BlobHelper.GetImgSource(App.CroppedImage);
 		}
 
 		protected override async void save()
@@ -141,7 +148,7 @@ namespace DiceRoller.ViewModels
 
 		protected override bool canSave()
 		{
-			return DiceWalls.Count > 1;
+			return MiniImageSource != null && DiceWalls.Count > 1;
 		}
 	}
 }
