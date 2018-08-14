@@ -115,20 +115,21 @@ namespace DiceRoller.ViewModels
 
 		private void EditDice(Dice dice)
 		{
+			//TODO: REFACTOR THIS
 			ContentPage page;
 			if (dice.IsGenerated)
 			{
 				var vm = new GenDiceCreatorPageViewModel(NavigationService, _ctx);
+				page = new GenDiceCreatorPage {BindingContext = vm};
 				vm.SetModel(dice);
 				vm.RefreshGame = RefreshGame;
-				page = new GenDiceCreatorPage {BindingContext = vm};
 			}
 			else
 			{
 				var vm = new DiceCreatorPageViewModel(NavigationService, _ctx);
+				page = new DiceCreatorPage {BindingContext = vm};
 				vm.SetModel(dice);
 				vm.RefreshGame = RefreshGame;
-				page = new DiceCreatorPage {BindingContext = vm};
 			}
 
 			App.MasterDetail.Detail.Navigation.PushAsync(page);

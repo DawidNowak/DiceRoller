@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -140,6 +141,7 @@ namespace DiceRoller.ViewModels
 		{
 			var nextId = _ctx.GetNextId<DiceWall>();
 			Model.Walls.ForEach(w => w.Id = nextId++);
+			Model.Game.Dice = new List<Dice>(Model.Game.Dice) { Model }.ToArray();
 			RefreshGame?.Invoke();
 			_ctx.InsertOrReplace(Model);
 			Model.Walls.ForEach(w => _ctx.InsertOrReplace(w));

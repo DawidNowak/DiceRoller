@@ -1,6 +1,7 @@
 ﻿using System;
 using Android.App;
 using Android.Content.PM;
+using Android.Content.Res;
 using Android.OS;
 using Android.Views;
 using DiceRoller.DataAccess.Context;
@@ -9,6 +10,7 @@ using Plugin.CurrentActivity;
 using Plugin.Permissions;
 using Prism;
 using Prism.Ioc;
+using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
 namespace DiceRoller.Droid
@@ -33,7 +35,7 @@ namespace DiceRoller.Droid
                 statusBarHeightInfo?.SetValue(this, 0);
             }
 
-            base.OnCreate(bundle);
+			base.OnCreate(bundle);
 			CrossCurrentActivity.Current.Init(this, bundle);
 
 			global::Xamarin.Forms.Forms.Init(this, bundle);
@@ -50,7 +52,51 @@ namespace DiceRoller.Droid
             this.Window.AddFlags(WindowManagerFlags.Fullscreen | WindowManagerFlags.TurnScreenOn);
         }
 
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
+	    public override void OnConfigurationChanged(Configuration newConfig)
+	    {
+		    base.OnConfigurationChanged(newConfig);
+
+		    switch (newConfig.Orientation)
+		    {
+			    case Orientation.Landscape:
+				    switch (Device.Idiom)
+				    {
+					    case TargetIdiom.Phone:
+						    LockRotation(Orientation.Portrait);
+						    break;
+					    case TargetIdiom.Tablet:
+						    LockRotation(Orientation.Landscape);
+						    break;
+				    }
+				    break;
+			    case Orientation.Portrait:
+				    switch (Device.Idiom)
+				    {
+					    case TargetIdiom.Phone:
+						    LockRotation(Orientation.Portrait);
+						    break;
+					    case TargetIdiom.Tablet:
+						    LockRotation(Orientation.Landscape);
+						    break;
+				    }
+				    break;
+		    }
+		}
+
+	    private void LockRotation(Orientation orientation)
+	    {
+		    switch (orientation)
+		    {
+			    case Orientation.Portrait:
+				    RequestedOrientation = ScreenOrientation.Portrait;
+				    break;
+			    case Orientation.Landscape:
+				    RequestedOrientation = ScreenOrientation.Landscape;
+				    break;
+		    }
+	    }
+
+		public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
             PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
