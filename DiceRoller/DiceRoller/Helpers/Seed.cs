@@ -16,11 +16,11 @@ namespace DiceRoller.Helpers
             var root = "DiceRoller.Images.";
             var logo = "logo.jpg";
 
-            var games = new[]
-            {
-                new Game {Name = "Mice and Mystics", Path = $"{root}MiceMystics.", LogoImageSource = logo},
-                new Game {Name = "Descent: Journeys in the Dark (2nd edition)", Path = $"{root}Descent.", LogoImageSource = logo},
-                new Game {Name = "Classic dice", Path = $"{root}Classic.", LogoImageSource = logo}
+			var games = new[]
+			{
+				new Game {Name = "Mice and Mystics", Path = $"{root}MiceMystics.", LogoImageSource = logo, IsValid = true },
+                new Game {Name = "Descent: Journeys in the Dark (2nd edition)", Path = $"{root}Descent.", LogoImageSource = logo, IsValid = true},
+                new Game {Name = "Classic dice", Path = $"{root}Classic.", LogoImageSource = logo, IsValid = true}
             };
 
             games.ForEach(g => g.LogoImage = BlobHelper.GetBytes($"{g.Path}{g.LogoImageSource}"));
@@ -32,84 +32,97 @@ namespace DiceRoller.Helpers
         public static Dice[] GetDice()
         {
             var mini = "mini.jpg";
+			var isValid = true;
             var dice = new[]
             {
                 new Dice
                 {
                     GameId = 1,
                     Path = "",
-                    MiniImageSource = mini
+                    MiniImageSource = mini,
+					IsValid = isValid
                 },
                 new Dice
                 {
                     GameId = 2,
                     Path = "yellow.",
-                    MiniImageSource = mini
-                },
+                    MiniImageSource = mini,
+					IsValid = isValid
+				},
                 new Dice
                 {
                     GameId = 2,
                     Path = "red.",
-                    MiniImageSource = mini
-                },
+                    MiniImageSource = mini,
+					IsValid = isValid
+				},
                 new Dice
                 {
                     GameId = 2,
                     Path = "blue.",
-                    MiniImageSource = mini
-                },
+                    MiniImageSource = mini,
+					IsValid = isValid
+				},
                 new Dice
                 {
                     GameId = 2,
                     Path = "brown.",
-                    MiniImageSource = mini
-                },
+                    MiniImageSource = mini,
+					IsValid = isValid
+				},
                 new Dice
                 {
                     GameId = 2,
                     Path = "gray.",
-                    MiniImageSource = mini
-                },
+                    MiniImageSource = mini,
+					IsValid = isValid
+				},
                 new Dice
                 {
                     GameId = 2,
                     Path = "black.",
-                    MiniImageSource = mini
-                },
+                    MiniImageSource = mini,
+					IsValid = isValid
+				},
                 new Dice
                 {
                     GameId = 3,
                     Path = "d6.",
-                    MiniImageSource = mini
-                },
+                    MiniImageSource = mini,
+					IsValid = isValid
+				},
 	            new Dice
 	            {
 		            GameId = 3,
 		            Path = "d8_1.",
 		            MiniImageSource = mini,
-		            IsGenerated = true
-	            },
+		            IsGenerated = true,
+					IsValid = isValid
+				},
 				new Dice
                 {
                     GameId = 3,
                     Path = "d12_1.",
                     MiniImageSource = mini,
-                    IsGenerated = true
-                },
+                    IsGenerated = true,
+					IsValid = isValid
+				},
                 new Dice
                 {
                     GameId = 3,
                     Path = "d20_1.",
                     MiniImageSource = mini,
-                    IsGenerated = true
-                },
+                    IsGenerated = true,
+					IsValid = isValid
+				},
                 new Dice
                 {
                     GameId = 3,
                     Path = "d100_1.",
                     MiniImageSource = mini,
-                    IsGenerated = true
-                }
+                    IsGenerated = true,
+					IsValid = isValid
+				}
             };
 
             SetIds(dice);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using DiceRoller.DataAccess.Context;
@@ -64,7 +65,7 @@ namespace DiceRoller.ViewModels
 				SetProperty(ref _logoImgBytes, value);
 				Model.LogoImage = value;
 				SaveCommand.RaiseCanExecuteChanged();
-			} 
+			}
 		}
 
 		private ObservableCollection<Dice> _diceList;
@@ -78,16 +79,22 @@ namespace DiceRoller.ViewModels
 		protected override async void save()
 		{
 			_ctx.InsertOrReplace(Model);
+			Model.Dice.ForEach(d =>
+			{
+				_ctx.InsertOrReplace(d);
+				d.Walls.ForEach(_ctx.InsertOrReplace);
+			});
 			_eventAggregator.Publish<GameChangedEvent>();
 			await App.MasterDetail.Detail.Navigation.PopAsync();
 		}
 
 		protected override bool canSave()
 		{
-			return !string.IsNullOrEmpty(Name) && LogoImgBytes != null && DiceList.Count > 0;
+			Model.IsValid = !string.IsNullOrEmpty(Name) && LogoImgBytes != null && DiceList.Count > 0 && DiceList.All(d => d.IsValid);
+			return Model.IsValid;
 		}
 
-		public void SetModel(Game game)
+		public override void SetModel(Game game)
 		{
 			Model = game;
 			Name = game.Name;
@@ -108,7 +115,7 @@ namespace DiceRoller.ViewModels
 				Walls = new ObservableCollection<DiceWall>()
 			};
 			DiceList.Add(dice);
-			Model.Dice.ToList().Add(dice);
+			Model.Dice = new List<Dice>(Model.Dice) { dice };
 			EditDice(dice);
 			SaveCommand.RaiseCanExecuteChanged();
 		}
@@ -116,20 +123,20 @@ namespace DiceRoller.ViewModels
 		private void EditDice(Dice dice)
 		{
 			//TODO: REFACTOR THIS
-			ContentPage page;
+			ContentPage page = null;
 			if (dice.IsGenerated)
 			{
 				var vm = new GenDiceCreatorPageViewModel(NavigationService, _ctx);
-				page = new GenDiceCreatorPage {BindingContext = vm};
 				vm.SetModel(dice);
 				vm.RefreshGame = RefreshGame;
+				page = new GenDiceCreatorPage { BindingContext = vm };
 			}
 			else
 			{
 				var vm = new DiceCreatorPageViewModel(NavigationService, _ctx);
-				page = new DiceCreatorPage {BindingContext = vm};
 				vm.SetModel(dice);
 				vm.RefreshGame = RefreshGame;
+				page = new DiceCreatorPage { BindingContext = vm };
 			}
 
 			App.MasterDetail.Detail.Navigation.PushAsync(page);
@@ -137,7 +144,16 @@ namespace DiceRoller.ViewModels
 
 		private async void DeleteDice(Dice dice)
 		{
-			if (await ((IGameCreatorView)View).DisplayAlert(dice.Path.Replace(". Mini image not set.", ""))) DiceList.Remove(dice);
+			if (await ((IGameCreatorView)View).DisplayAlert(dice.Path.Replace(". Mini image not set.", "")))
+			{
+				DiceList.Remove(dice);
+				var diceList = Model.Dice.ToList();
+				diceList.Remove(dice);
+				Model.Dice = diceList;
+				_ctx.Delete(dice);
+			}
+
+			SaveCommand.RaiseCanExecuteChanged();
 		}
 
 		private async void SetLogoImage()

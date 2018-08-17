@@ -18,7 +18,7 @@ namespace DiceRoller.DataAccess.Models
         [ManyToOne]
         public virtual Game Game { get; set; }
         public bool IsGenerated { get; set; }
-
-        public byte[] MiniImage { get; set; }
+        public bool IsValid { get; set; }
+		public byte[] MiniImage { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using DiceRoller.Controls;
 using DiceRoller.DataAccess.Context;
@@ -19,6 +18,8 @@ namespace DiceRoller.ViewModels
 	{
 		private readonly IContext _ctx;
 		private DiceWall _wall;
+
+		//TODO: REMOVE DICEWALL
 
 		public DiceCreatorPageViewModel(INavigationService navigationService, IContext ctx) : base(navigationService)
 		{
@@ -104,6 +105,7 @@ namespace DiceRoller.ViewModels
 		private async void AddDiceWall()
 		{
 			var img = await GetImage("Dice wall image", RefreshWall);
+			if (img.Length == 0) return;
 
 			_wall = new DiceWall
 			{
@@ -143,14 +145,14 @@ namespace DiceRoller.ViewModels
 			Model.Walls.ForEach(w => w.Id = nextId++);
 			Model.Game.Dice = new List<Dice>(Model.Game.Dice) { Model }.ToArray();
 			RefreshGame?.Invoke();
-			_ctx.InsertOrReplace(Model);
 			Model.Walls.ForEach(w => _ctx.InsertOrReplace(w));
 			await App.MasterDetail.Detail.Navigation.PopAsync();
 		}
 
 		protected override bool canSave()
 		{
-			return MiniImageSource != null && DiceWalls.Count > 1;
+			Model.IsValid = MiniImageSource != null && DiceWalls.Count > 1;
+			return Model.IsValid;
 		}
 	}
 }

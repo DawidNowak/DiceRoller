@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DiceRoller.Helpers
 {
-    public class DiceData
+	public class DiceData
     {
 	    public int WallsCount { get; set; }
 	    public int StartValue { get; set; }

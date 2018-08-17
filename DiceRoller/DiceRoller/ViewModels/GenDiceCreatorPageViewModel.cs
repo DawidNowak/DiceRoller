@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using DiceRoller.DataAccess.Context;
 using DiceRoller.DataAccess.Models;
 using DiceRoller.Helpers;
@@ -43,19 +42,27 @@ namespace DiceRoller.ViewModels
 		    set => SetProperty(ref _startValue, value);
 	    }
 
-	    protected override async void save()
+		public override void SetModel(Dice model)
+		{
+			base.SetModel(model);
+			var diceData = new DiceData(model.Path == "Generated"? "d0_0." : model.Path);
+			Path = model.Path;
+			WallsCount = diceData.WallsCount;
+			StartValue = diceData.StartValue;
+		}
+
+		protected override async void save()
 	    {
 		    Model.Path = $"d{WallsCount}_{StartValue}.";
 		    Model.MiniImage = DrawHelper.DrawDice(new DiceData(Model.Path), false).ToArray();
-			Model.Game.Dice = new List<Dice>(Model.Game.Dice) {Model}.ToArray();
-			_ctx.InsertOrReplace(Model);
 			RefreshGame?.Invoke();
 		    await App.MasterDetail.Detail.Navigation.PopAsync();
 		}
 
 	    protected override bool canSave()
 	    {
-		    return WallsCount > 1;
+			Model.IsValid = WallsCount > 1;
+			return Model.IsValid;
 	    }
     }
 }
