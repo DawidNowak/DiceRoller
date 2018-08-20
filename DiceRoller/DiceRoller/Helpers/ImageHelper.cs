@@ -36,6 +36,7 @@ namespace DiceRoller.Helpers
 	    {
 		    return new SwipeableImage
 		    {
+				BindingContext = wall,
 			    Source = BlobHelper.GetImgSource(wall.Image),
 			    WidthRequest = size,
 			    HeightRequest = size

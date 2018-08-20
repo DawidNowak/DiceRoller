@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using DiceRoller.Controls;
 using DiceRoller.DataAccess.Context;
@@ -18,12 +19,12 @@ namespace DiceRoller.ViewModels
 	{
 		private readonly IContext _ctx;
 		private DiceWall _wall;
-
-		//TODO: REMOVE DICEWALL
+		private int _nextId;
 
 		public DiceCreatorPageViewModel(INavigationService navigationService, IContext ctx) : base(navigationService)
 		{
 			_ctx = ctx;
+			_nextId = _ctx.GetNextId<DiceWall>();
 			SetMiniImageCommand = new DelegateCommand(SetImage);
 			AddDiceWallCommand = new DelegateCommand(AddDiceWall);
 			DiceWalls = new ObservableCollection<SwipeableImage>();
@@ -37,16 +38,20 @@ namespace DiceRoller.ViewModels
 		{
 			base.SetModel(dice);
 			Path = Model.Path.Replace(". Mini image not set.", "");
+			Refresh();
+		}
+
+		private void Refresh()
+		{
+			DiceWalls.Clear();
 			Model.Walls.ForEach(w =>
 			{
-				DiceWalls.Add(new SwipeableImage
-				{
-					Source = BlobHelper.GetImgSource(w.Image),
-					HeightRequest = 36d,
-					WidthRequest = 36d
-				});
+				var img = ImageHelper.DrawDiceWall(w, 64d);
+				DiceWalls.Add(img);
+				((IDiceCreatorView)View).AddWall(img);
 			});
 			if (Model.MiniImage != null) MiniImageSource = BlobHelper.GetImgSource(Model.MiniImage);
+			SaveCommand.RaiseCanExecuteChanged();
 		}
 
 		private string _path;
@@ -111,13 +116,22 @@ namespace DiceRoller.ViewModels
 			{
 				Dice = Model,
 				DiceId = Model.Id,
-				Image = img
+				Image = img,
+				Id = _nextId++
 			};
 
-			Model.Walls.Add(_wall);
+			Model.Walls = new List<DiceWall>(Model.Walls) { _wall };
 			if (DiceWalls.Count > 0) DiceWalls.RemoveAt(DiceWalls.Count - 1);
 			DiceWalls.Add(ImageHelper.DrawDiceWall(_wall, 64d));
 			SaveCommand.RaiseCanExecuteChanged();
+		}
+
+		public void DeleteDiceWall(DiceWall wall)
+		{
+			var walls = Model.Walls.ToList();
+			walls.Remove(wall);
+			Model.Walls = walls;
+			_ctx.Delete(wall);
 		}
 
 		private void RefreshWall()
@@ -141,9 +155,6 @@ namespace DiceRoller.ViewModels
 
 		protected override async void save()
 		{
-			var nextId = _ctx.GetNextId<DiceWall>();
-			Model.Walls.ForEach(w => w.Id = nextId++);
-			Model.Game.Dice = new List<Dice>(Model.Game.Dice) { Model }.ToArray();
 			RefreshGame?.Invoke();
 			Model.Walls.ForEach(w => _ctx.InsertOrReplace(w));
 			await App.MasterDetail.Detail.Navigation.PopAsync();
@@ -151,6 +162,7 @@ namespace DiceRoller.ViewModels
 
 		protected override bool canSave()
 		{
+			if (Model == null) return false;
 			Model.IsValid = MiniImageSource != null && DiceWalls.Count > 1;
 			return Model.IsValid;
 		}

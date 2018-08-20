@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
 using DiceRoller.Controls;
 using DiceRoller.DataAccess.Helpers;
+using DiceRoller.DataAccess.Models;
 using DiceRoller.Interfaces;
 using DiceRoller.ViewModels;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 using Xamarin.Forms.Xaml;
 
 namespace DiceRoller.Views
@@ -11,6 +13,8 @@ namespace DiceRoller.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class DiceCreatorPage : ContentPage, IDiceCreatorView
 	{
+		DiceCreatorPageViewModel _vm;
+		
 		public DiceCreatorPage ()
 		{
 			InitializeComponent ();
@@ -18,7 +22,8 @@ namespace DiceRoller.Views
 
 	    protected override void OnBindingContextChanged()
 	    {
-	        ((DiceCreatorPageViewModel) BindingContext).View = this;
+			_vm = (DiceCreatorPageViewModel)BindingContext;
+	        _vm.View = this;
 	        base.OnBindingContextChanged();
 	    }
 
@@ -34,7 +39,24 @@ namespace DiceRoller.Views
 
 		public void AddWall(SwipeableImage wall)
 		{
+			wall.SwipedLeft += (sender, args) => RemoveWall((SwipeableImage)sender);
+			wall.SwipedRight += (sender, args) => RemoveWall((SwipeableImage)sender);
 			DiceWallLayout.Children.Add(wall);
+		}
+
+		private void RemoveWall(SwipeableImage o)
+		{
+			var wall = (DiceWall)o.BindingContext;
+			var index = DiceWallLayout.Children.IndexOf(o);
+			if (index < 0) return;
+			DiceWallLayout.Children.RemoveAt(index);
+			_vm.DeleteDiceWall(wall);
+		}
+
+		private void Refresh()
+		{
+			DiceWallLayout.Children.Clear();
+			_vm.DiceWalls.ForEach(i => AddWall(i));
 		}
 	}
 }

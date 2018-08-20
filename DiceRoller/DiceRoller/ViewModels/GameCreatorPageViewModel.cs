@@ -18,12 +18,14 @@ namespace DiceRoller.ViewModels
 	{
 		private readonly IContext _ctx;
 		private readonly IEventAgregator _eventAggregator;
+		private int _nextId;
 
 		public GameCreatorPageViewModel(IContext ctx, INavigationService navigationService, IEventAgregator eventAggregator) : base(navigationService)
 		{
 			_ctx = ctx;
 			Title = "Game Creator";
 
+			_nextId = _ctx.GetNextId<Dice>();
 			_eventAggregator = eventAggregator;
 			DiceList = new ObservableCollection<Dice>();
 			AddDiceCommand = new DelegateCommand(AddDice);
@@ -96,7 +98,7 @@ namespace DiceRoller.ViewModels
 
 		public override void SetModel(Game game)
 		{
-			Model = game;
+			base.SetModel(game);
 			Name = game.Name;
 			LogoImgBytes = game.LogoImage;
 			RefreshGame();
@@ -107,7 +109,7 @@ namespace DiceRoller.ViewModels
 			var type = await ((IGameCreatorView)View).DiceTypeAlert();
 			var dice = new Dice
 			{
-				Id = _ctx.GetNextId<Dice>(),
+				Id = _nextId++,
 				Game = Model,
 				GameId = Model.Id,
 				IsGenerated = type,
@@ -122,21 +124,22 @@ namespace DiceRoller.ViewModels
 
 		private void EditDice(Dice dice)
 		{
-			//TODO: REFACTOR THIS
 			ContentPage page = null;
 			if (dice.IsGenerated)
 			{
 				var vm = new GenDiceCreatorPageViewModel(NavigationService, _ctx);
+				page = new GenDiceCreatorPage();
+				page.BindingContext = vm;
 				vm.SetModel(dice);
 				vm.RefreshGame = RefreshGame;
-				page = new GenDiceCreatorPage { BindingContext = vm };
 			}
 			else
 			{
 				var vm = new DiceCreatorPageViewModel(NavigationService, _ctx);
+				page = new DiceCreatorPage();
+				page.BindingContext = vm;
 				vm.SetModel(dice);
 				vm.RefreshGame = RefreshGame;
-				page = new DiceCreatorPage { BindingContext = vm };
 			}
 
 			App.MasterDetail.Detail.Navigation.PushAsync(page);

@@ -3,10 +3,7 @@ using System.Collections.Generic;
 
 namespace DiceRoller.Helpers
 {
-    public class PubSubEvent
-    {
-        
-    }
+    public class PubSubEvent { }
 
     public class GameChangedEvent : PubSubEvent { }
 
