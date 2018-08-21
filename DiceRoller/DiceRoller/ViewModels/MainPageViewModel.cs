@@ -33,8 +33,8 @@ namespace DiceRoller.ViewModels
             GameNavigationCommand = new DelegateCommand<Game>(Navigate);
 			EditGameCommand = new DelegateCommand<Game>(EditGame, CanEdit);
 			DeleteGameCommand = new DelegateCommand<Game>(DeleteGame, CanEdit);
-            _eventAggregator.Subscribe<GameChangedEvent>(RefreshGames);
-            RefreshGames();
+            _eventAggregator.Subscribe<GameChangedEvent>(o => RefreshGames(o));
+            RefreshGames(null);
         }
 
         private string _filterText = string.Empty;
@@ -50,7 +50,7 @@ namespace DiceRoller.ViewModels
             }
         }
 
-        private void RefreshGames()
+        private void RefreshGames(object o)
         {
             _games.Clear();
             Games.Clear();
@@ -69,7 +69,7 @@ namespace DiceRoller.ViewModels
 
         private void Navigate(Game game)
         {
-            var vm = new GamePageViewModel(_ctx, NavigationService) {Game = game};
+            var vm = new GamePageViewModel(_ctx, NavigationService, _eventAggregator) {Game = game};
             var page = new GamePage { BindingContext = vm };
 
             App.MasterDetail.Detail.Navigation.PushAsync(page);
@@ -90,7 +90,7 @@ namespace DiceRoller.ViewModels
 		    //confirmation
 		    Games.Remove(game);
 			_ctx.Delete(game);
-			RefreshGames();
+			RefreshGames(null);
 	    }
 
 	    private bool CanEdit(Game game)

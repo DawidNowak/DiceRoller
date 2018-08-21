@@ -29,12 +29,14 @@ namespace DiceRoller.ViewModels
 		public DelegateCommand RollCommand { get; }
 
 
-		public GamePageViewModel(IContext ctx, INavigationService navigationService) : base(navigationService)
+		public GamePageViewModel(IContext ctx, INavigationService navigationService, IEventAgregator eventAgregator) : base(navigationService)
 		{
 			_ctx = ctx;
 			Title = "Game View Model";
 			RollCommand = new DelegateCommand(Roll, CanRoll);
 			_minis = new List<View>();
+			eventAgregator.Subscribe<AnimateRollChanged>(o => _animateRoll = (bool)o);
+			eventAgregator.Subscribe<SaveStateChanged>(o => _saveState = (bool)o);
 		}
 
 		private bool CanRoll() => _canRoll;

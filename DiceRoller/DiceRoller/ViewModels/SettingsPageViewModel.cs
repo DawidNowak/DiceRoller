@@ -34,6 +34,7 @@ namespace DiceRoller.ViewModels
             set
             {
                 UpdateConfigKeyValue(Consts.RollAnimationKey, value.ToString());
+				_eventAggregator.Publish<AnimateRollChanged>(value);
                 RaisePropertyChanged();
             }
         }
@@ -44,7 +45,8 @@ namespace DiceRoller.ViewModels
             set
             {
                 UpdateConfigKeyValue(Consts.SaveDiceStateKey, value.ToString());
-                RaisePropertyChanged();
+				_eventAggregator.Publish<SaveStateChanged>(value);
+				RaisePropertyChanged();
             }
         }
 

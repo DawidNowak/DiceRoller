@@ -86,7 +86,7 @@ namespace DiceRoller.ViewModels
 				_ctx.InsertOrReplace(d);
 				d.Walls.ForEach(_ctx.InsertOrReplace);
 			});
-			_eventAggregator.Publish<GameChangedEvent>();
+			_eventAggregator.Publish<GameChangedEvent>(null);
 			await App.MasterDetail.Detail.Navigation.PopAsync();
 		}
 
