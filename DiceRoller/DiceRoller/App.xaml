@@ -4,7 +4,6 @@
              xmlns:prism="clr-namespace:Prism.Autofac;assembly=Prism.Autofac.Forms"
              xmlns:converters="clr-namespace:DiceRoller.Converters;assembly=DiceRoller"
              xmlns:controls="clr-namespace:DiceRoller.Controls;assembly=DiceRoller"
-             xmlns:triggers="clr-namespace:DiceRoller.Triggers;assembly=DiceRoller"
              x:Class="DiceRoller.App">
 	<Application.Resources>
 
@@ -15,7 +14,11 @@
                 <Setter Property="ColumnSpacing" Value="10"/>
                 <Setter Property="RowSpacing" Value="10"/>
             </Style>
-            
+
+            <Style TargetType="controls:RoundedButton">
+                <Setter Property="BackgroundColor" Value="LightGray"/>
+            </Style>
+
             <converters:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
             <converters:ByteArrayToVisibilityConverter x:Key="ByteArrayToVisibilityConverter"/>
             <converters:InvertByteArrayToVisibilityConverter x:Key="InvertByteArrayToVisibilityConverter"/>

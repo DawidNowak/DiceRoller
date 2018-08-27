@@ -13,11 +13,8 @@
                                  ColumnSpacing="10" 
                                  RowSpacing="10"/>
         <StackLayout VerticalOptions="StartAndExpand">
-            
-            <!--TODO: implement scroll when dice has to push roll button off the screen-->
             <controls:WrapLayout x:Name="DiceLayout"/>
         </StackLayout>
-        <Button Text="Roll"
-                Command="{Binding Path=RollCommand}"></Button>
+        <controls:RoundedButton Text="Roll" Command="{Binding Path=RollCommand}"/>
     </StackLayout>
 </ContentPage>
