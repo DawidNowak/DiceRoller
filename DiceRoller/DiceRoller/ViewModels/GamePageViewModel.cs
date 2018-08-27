@@ -83,7 +83,7 @@ namespace DiceRoller.ViewModels
 			{
 				var intId = Convert.ToInt32(id);
 				var toAdd = _ctx.GetById<Dice>(intId);
-				AddDice(toAdd);
+				if (toAdd != null) AddDice(toAdd);
 			});
 		}
 
